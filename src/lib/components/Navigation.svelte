@@ -1,22 +1,29 @@
+<script>
+	import Link from "./Link.svelte";
+</script>
+
 <header>
   <nav>
-    <a href="/">Home</a>
-    <a href="/map">Map</a>
-    <a href="/about">About</a>
-    <a href="/product/management">Product Management</a>
+    <Link href="/">Home</Link>
+    <Link href="/store">Stores</Link>
+    <Link href="/map">Map</Link>
+    <Link href="/product">Products</Link>
+    <Link href={"/about"}>About</Link>
+  </nav>
+  <nav>
+    Themes: Searing Retinas / Stare Into the Void
   </nav>
 </header>
 
-<style>
+<style lang="scss">
+  header {
+    display: flex;
+    justify-content: space-between;
+  }
+
   nav {
     margin: 10px;
-    width: 100%;
-  }
-  
-  a {
-    margin-right: 10px;
-    font-size: 20px;
-    text-decoration: none;
-    color: #333;
+    display: flex;
+    font-size: 1.25rem;
   }
 </style>

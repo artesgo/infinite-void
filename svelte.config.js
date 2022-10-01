@@ -12,7 +12,10 @@ const config = {
 			assets: 'static',
 			lib: 'src/lib',
 		},
-	}
+	},
+	// experimental: {
+	// 	useVitePreprocess: true,
+	// }
 };
 
 export default config;

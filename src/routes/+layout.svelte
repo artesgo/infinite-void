@@ -1,40 +1,27 @@
 <script>
 	import Navigation from "$lib/components/Navigation.svelte";
 </script>
-<Navigation />
 
+<Navigation />
 <main>
   <slot></slot>
 </main>
 
-<style global>
-  @font-face {
-    font-family: 'Caveat';
-    src: local('Caveat') url('/Caveat-VariableFont_wght.ttf');
+<style global lang="scss">
+  @use "./styles/partials.scss";
+
+  * {
+    font-family: 'Caveat', 'Courier New', Courier, monospace;
+    box-sizing: border-box;
   }
 
   body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-  }
-
-  * {
-    font-family: 'Caveat', 'Courier New', Courier, monospace;
   }
 
   p {
-    font-size: 20px;
-  }
-
-  .sr-only {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
+    font-size: 1.5rem;
   }
   
   main {

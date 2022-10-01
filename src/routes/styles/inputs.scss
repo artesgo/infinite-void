@@ -1,0 +1,15 @@
+label {
+  display: flex;
+  font-size: 1.5rem;
+  justify-content: space-between;
+}
+
+input, select {
+  width: 400px;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+option {
+  font-size: 1.5rem;
+}

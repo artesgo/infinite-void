@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Button from '$lib/components/Button.svelte';
 	import { ProductClient } from "$lib/client/supabase.product";
 	import Required from "$lib/components/Required.svelte";
 	import SrOnly from "$lib/components/SrOnly.svelte";
@@ -9,8 +10,7 @@
   // Double check item duplicates
   // Show list of existing items that match product name / brand
   let product: Product = {
-    id: '',
-    name: 'hi',
+    name: '',
     brand: '',
     weight: '',
     weight_unit: '',
@@ -18,8 +18,10 @@
   };
 
   let products$: Promise<Product[]>;
+  let searching = false;
 
   function add() {
+    searching = true;
     ProductClient.addProduct(product);
   }
 
@@ -28,6 +30,7 @@
   }
 </script>
 
+<h1>Product List</h1>
 <div class='inventori'>
   <section class="what">
     <!-- save to product table -->
@@ -36,7 +39,7 @@
       <input type="text" bind:value={product.name} placeholder="enter the product's name" />
     </label>
     <label>
-      Brand
+      Brand <Required />
       <input type="text" bind:value={product.brand} placeholder="product brand" />
     </label>
   </section>
@@ -44,14 +47,23 @@
   <section class='numbers'>
     <label>
       Weight
-      <input type="text" bind:value={product.weight} placeholder="weight (Optional)" />
+      <input type="number" bind:value={product.weight} placeholder="weight" />
     </label>
     <label>
       Weight Unit
-      <select bind:value={product.weight_unit}>
-        <option value="lb">lb</option>
+      <select
+        bind:value={product.weight_unit}
+        disabled={!product.weight}
+      >
+        <option value="lb">pound (lb)</option>
+        <option value="g">gram (g)</option>
+        <option value="kg">kilogram (kg)</option>
+        <option value="oz">ounce (oz)</option>
+        <option value="ml">millilitre (ml)</option>
+        <option value="L">litre (L)</option>
       </select>
     </label>
+
     <label>
       SKU <SrOnly>Stock Keeping Unit</SrOnly>
       <input type="text" bind:value={product.sku} placeholder="SKU (Optional)"/>
@@ -73,8 +85,7 @@
   </section>
 </div>
 
-<button on:click={add}>Add</button>
-<button on:click={find}>Find</button>
+<Button on:click={find}>Find</Button>
 
 {#await products$}
   Getting products...
@@ -86,20 +97,10 @@
       <div>No morsels here...</div>
     {/each}
   {/if}
+  {#if products && products.length === 0 && searching}
+    We couldn't find the product, would you like to add it?
+    <Button on:click={add}>Add Product</Button>
+  {/if}
 {/await}
 <style lang="scss">
-  label {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  section {
-    /* border: 1px solid black; */
-  }
-
-  input, select {
-    font-family: sans-serif;
-    width: 70%;
-    margin-bottom: 10px;
-  }
 </style>
