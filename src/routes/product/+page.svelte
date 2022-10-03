@@ -1,31 +1,31 @@
 <script lang="ts">
-	import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/cta/Button.svelte';
 	import { ProductClient } from "$lib/client/supabase.product";
-	import Required from "$lib/components/Required.svelte";
-	import SrOnly from "$lib/components/SrOnly.svelte";
   import type { Product } from "$lib/model/product";
+	import Input from '$lib/components/input/Input.svelte';
+	import Select from '$lib/components/input/Select.svelte';
 
   // TODO: 
   // Call API and save item to db
   // Double check item duplicates
   // Show list of existing items that match product name / brand
-  let product: Product = {
-    name: '',
-    brand: '',
-    weight: '',
-    weight_unit: '',
-    sku: '',
-  };
+  let name: '';
+  let brand: '';
+  let weight: '';
+  let weight_unit: '';
+  let sku: '';
 
   let products$: Promise<Product[]>;
   let searching = false;
 
   function add() {
     searching = true;
+    const product = { name, brand, weight, weight_unit, sku };
     ProductClient.addProduct(product);
   }
 
   async function find() {
+    const product = { name, brand, weight, weight_unit, sku };
     products$ = ProductClient.findProducts(product) as Promise<Product[]>;
   }
 </script>
@@ -34,41 +34,47 @@
 <div class='inventori'>
   <section class="what">
     <!-- save to product table -->
-    <label>
-      Product Name <Required />
-      <input type="text" bind:value={product.name} placeholder="enter the product's name" />
-    </label>
-    <label>
-      Brand <Required />
-      <input type="text" bind:value={product.brand} placeholder="product brand" />
-    </label>
+    <Input
+      bind:value={name}
+      placeholder="enter the product's name"
+      type={'text'}
+      id={'p-name'}
+      label={'Product Name'}
+      required={true}
+    />
+    <Input
+      bind:value={brand}
+      placeholder="enter the product's brand"
+      type={'text'}
+      id={'p-brand'}
+      label={'Product Brand'}
+      required={true}
+    />
   </section>
 
   <section class='numbers'>
-    <label>
-      Weight
-      <input type="number" bind:value={product.weight} placeholder="weight" />
-    </label>
-    <label>
-      Weight Unit
-      <select
-        bind:value={product.weight_unit}
-        disabled={!product.weight}
-      >
-        <option value="lb">pound (lb)</option>
-        <option value="g">gram (g)</option>
-        <option value="kg">kilogram (kg)</option>
-        <option value="oz">ounce (oz)</option>
-        <option value="ml">millilitre (ml)</option>
-        <option value="L">litre (L)</option>
-      </select>
-    </label>
-
-    <label>
-      SKU <SrOnly>Stock Keeping Unit</SrOnly>
-      <input type="text" bind:value={product.sku} placeholder="SKU (Optional)"/>
-    </label>
-
+    <Input
+      bind:value={weight}
+      placeholder="enter the product's weight"
+      type={'number'}
+      id={'p-weight'}
+      label={'Product Weight'}
+    />
+    <Select id={"p-units"} bind:value={weight_unit} disabled={!weight}>
+      <option value="lb">pound (lb)</option>
+      <option value="g">gram (g)</option>
+      <option value="kg">kilogram (kg)</option>
+      <option value="oz">ounce (oz)</option>
+      <option value="ml">millilitre (ml)</option>
+      <option value="L">litre (L)</option>
+    </Select>
+    <Input
+      bind:value={sku}
+      placeholder="product's SKU (Optional)"
+      type={'text'}
+      id={'p-sku'}
+      label={'Product SKU'}
+    />
     <!-- Optional -->
     <!-- <label>
       Height (Top to Bottom)
@@ -102,5 +108,3 @@
     <Button on:click={add}>Add Product</Button>
   {/if}
 {/await}
-<style lang="scss">
-</style>

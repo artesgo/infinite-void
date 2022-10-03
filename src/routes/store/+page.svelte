@@ -2,9 +2,9 @@
 	import { stores } from '$lib/store/stores';
 	import type { Store } from "$lib/model/store";
 	import { StoreClient } from "$lib/client/supabase.store";
-	import Button from "$lib/components/Button.svelte";
-	import Required from "$lib/components/Required.svelte";
-	import Link from "$lib/components/Link.svelte";
+	import Button from "$lib/components/cta/Button.svelte";
+	import Required from "$lib/components/input/Required.svelte";
+	import Link from "$lib/components/nav/Link.svelte";
 	import { appState } from "$lib/store/app";
 	import Delete from "./delete.svelte";
 
