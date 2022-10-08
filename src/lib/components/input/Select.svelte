@@ -11,6 +11,9 @@
   {id}
   {value}
   {disabled}
+  on:focus
+  on:blur
 >
+  <!-- options -->
   <slot></slot>
 </select>

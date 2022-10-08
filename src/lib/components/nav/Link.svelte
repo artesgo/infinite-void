@@ -1,10 +1,13 @@
 <script>
   export let href = '';
+  export let inline = false;
 </script>
 
-<a {href} on:click>
+<a {href} on:click class:inline={inline}>
   <span><slot></slot></span>
+  {#if $$slots.default}
   <span></span>
+  {/if}
 </a>
 
 <style lang="scss">
@@ -12,11 +15,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 10px;
-    // font-size: 20px;
     text-decoration: none;
     color: #333;
     padding: 0 10px;
+    &.inline {
+      font-size: 1.5rem;
+    }
     span:last-child {
       transition: 300ms;
       width: 10px;

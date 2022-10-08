@@ -8,9 +8,6 @@
   function deleteStore () {
     // TODO: delete from db
     $stores = [...$stores.filter(_store => _store.id !== store.id)];
-    console.log($stores.filter(_store => _store.id !== store.id));
-    console.log(store);
-    
   }
 </script>
 

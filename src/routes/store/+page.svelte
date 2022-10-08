@@ -3,10 +3,10 @@
 	import type { Store } from "$lib/model/store";
 	import { StoreClient } from "$lib/client/supabase.store";
 	import Button from "$lib/components/cta/Button.svelte";
-	import Required from "$lib/components/input/Required.svelte";
 	import Link from "$lib/components/nav/Link.svelte";
 	import { appState } from "$lib/store/app";
-	import Delete from "./delete.svelte";
+	import Input from '$lib/components/input/Input.svelte';
+	import Table from '$lib/components/layout/Table.svelte';
 
   // TODO: 
   // Call API and save item to db
@@ -19,7 +19,6 @@
     city: '',
   };
 
-  let store$: Promise<Store[]>;
   let searching = false;
 
   function add() {
@@ -36,38 +35,33 @@
 
   async function find() {
     searching = true;
-    store$ = StoreClient.findStores(store) as Promise<Store[]>;
+    let store$ = StoreClient.findStores(store) as Promise<Store[]>;
     let response = await store$;
     $stores = [...response];
   }
 
   $: hasRequired = store.name && store.address && store.city;
+  let headers = [
+    'Name',
+    'Address',
+    'City',
+    'Select',
+  ]
 </script>
 
+<style lang="scss">
+  @use './store';
+</style>
+
+<h1>Store Selection</h1>
 <div class='inventori'>
-  <h1>Store Selection</h1>
   <section class="what">
-    <!-- save to product table -->
-    <label>
-      Store Name <Required />
-      <input type="text" required
-        bind:value={store.name} placeholder="enter the store's name" />
-    </label>
-    <label>
-      Address <Required />
-      <input type="text" required
-        bind:value={store.address} placeholder="address" />
-    </label>
-    <label>
-      City <Required />
-      <input type="text" required
-        bind:value={store.city} placeholder="city" />
-    </label>
-    <label>
-      Category
-      <input type="text" required
-        bind:value={store.category} placeholder="category" />
-    </label>
+    <Input id={'s-name'} label={'store name'} type={'text'} required={true} placeholder={'Store Name'} bind:value={store.name} />
+    <Input id={'s-cate'} label={'category'} type={'text'} required={true} placeholder={'Category'} bind:value={store.category} />
+  </section>
+  <section class="where">
+    <Input id={'s-addy'} label={'address'} type={'text'} required={true} placeholder={'Address'} bind:value={store.address} />
+    <Input id={'s-city'} label={'city'} type={'text'} required={true} placeholder={'City'} bind:value={store.city} />
   </section>
 </div>
 
@@ -76,28 +70,14 @@
 </div>
 
 {#if $stores && $stores.length > 0}
-  <table>
-    <caption>We found these stores...</caption>
-    <thead>
+  <Table {headers} caption={'We found these stores...'}>
+    {#each $stores as s (s.id)}
       <tr>
-        <th>Name</th>
-        <th>Address</th>
-        <th>City</th>
-        <th>View</th>
-        <th>Select</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each $stores as s (s.id)}
-      <tr>
-        <td>{s.name}</td>
-        <td>{s.address}</td>
-        <td>{s.city}</td>
-        <td class="action">
-          <Link href={'/store/' + s.id} on:click={() => viewStore(s)}>View and Edit</Link>
-        </td>
+        <td><Link href={'/store/' + s.id} on:click={() => viewStore(s)}>{s.name}</Link></td>
+        <td><Link href={'/store/' + s.id} on:click={() => viewStore(s)}>{s.address}</Link></td>
+        <td><Link href={'/store/' + s.id} on:click={() => viewStore(s)}>{s.city}</Link></td>
         <td>
-          <div class='action'>
+          <div class='flex justify-center'>
             {#if $appState.myStore && $appState.myStore.id === s.id}
               Selected
             {:else}
@@ -106,28 +86,11 @@
           </div>
         </td>
       </tr>
-      {/each}
-    </tbody>
-  </table>
+    {/each}
+  </Table>
 {/if}
-
 
 {#if $stores && $stores.length === 0 && searching}
   We couldn't find the store, would you like to add it?
   <Button on:click={add}>Add Store</Button>
 {/if}
-<style lang="scss">
-  label {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  table {
-    width: 100%;
-  }
-
-  .action {
-    display: flex;
-    justify-content: center;
-  }
-</style>

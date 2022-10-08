@@ -1,7 +1,5 @@
 <script>
-
 	import Button from "$lib/components/cta/Button.svelte";
-
 </script>
 <!-- TODO: Find User Store -->
 <h1>Salutations..</h1>
