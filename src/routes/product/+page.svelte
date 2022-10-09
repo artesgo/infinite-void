@@ -8,19 +8,19 @@
 	import Link from '$lib/components/nav/Link.svelte';
 	import Select from '$lib/components/input/Select.svelte';
 	import Table from '$lib/components/layout/Table.svelte';
-  import {Html5QrcodeScanner} from "html5-qrcode"
   import type { Product } from "$lib/model/product";
+	import BarCodeScanner from '$lib/components/input/BarCodeScanner.svelte';
 
   // TODO: 
   // Call API and save item to db
   // Double check item duplicates
   // Show list of existing items that match product name / brand
-  let brand: '';
-  let name: '';
+  let brand = '';
+  let name = '';
   let searching = false;
-  let sku: '';
-  let weight_unit: '';
-  let weight: '';
+  let sku = '';
+  let weight_unit = '';
+  let weight = '';
   let headers = [
     'Name',
     'Brand',
@@ -62,36 +62,19 @@
     "L" = "litre (L)",
     "kg" = "kilogram (kg)",
   }
-
-  //#region barcode reader
-  function onScanSuccess(decodedText: string, decodedResult: any) {
-    // handle the scanned code as you like, for example:
-    console.log(`Code matched = ${decodedText}`, decodedResult);
-    scannedText = decodedText;
-  }
-  let scannedText: string;
-
-  function onScanFailure(error: any) {
-    // handle scan failure, usually better to ignore and keep scanning.
-    // for example:
-    console.warn(`Code scan error = ${error}`);
+  
+  function onScan(code: string) {
+    sku = code;
   }
 
-  let html5QrcodeScanner;
-  onMount(() => {
-    html5QrcodeScanner = new Html5QrcodeScanner(
-      "reader",
-      { fps: 30, qrbox: {width: 250, height: 250}, supportedScanTypes: [0] },
-      false
-    );
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-  });
-  //#endregion
+  function onErr(err: any) {
+    console.warn(err);
+  }
 </script>
 
 <h1>Product List</h1>
-<div class='inventori'>
-  <section class="what">
+<div class='flex wrap'>
+  <section class="two-third">
     <!-- save to product table -->
     <Input
       bind:value={name}
@@ -101,8 +84,6 @@
       label={'Product Name'}
       required={true}
     />
-  </section>
-  <section class='numbers'>
     <Input
       bind:value={brand}
       placeholder="enter the product's brand"
@@ -112,9 +93,7 @@
       required={true}
     />
   </section>
-</div>
-<div class='inventori'>
-  <section class="what">
+  <section class="third">
     <Input
       bind:value={weight}
       placeholder="enter the product's weight"
@@ -122,9 +101,6 @@
       id={'p-weight'}
       label={'Product Weight'}
     />
-  </section>
-
-  <section class='numbers'>
     <Select id={"p-units"} bind:value={weight_unit} disabled={!weight}>
       <option value="g">{weights['g']}</option>
       <option value="ml">{weights['ml']}</option>
@@ -137,8 +113,8 @@
     </Select>
   </section>
 </div>
-<div class='inventori'>
-  <section class="what">
+<div class='flex wrap'>
+  <section class="half">
     <Input
       bind:value={sku}
       placeholder="product's SKU (Optional)"
@@ -148,12 +124,11 @@
     />
   </section>
 
-  <section class='numbers'>
-    <div id="reader"></div>
-
-    {scannedText || ''}
+  <section class="half">
+    <BarCodeScanner scan={onScan} error={onErr} />
   </section>
 </div>
+
 <Button on:click={find}>Find</Button>
 <Button on:click={add}>Add Product</Button>
 
@@ -179,15 +154,21 @@
   {/each}
 </Table>
 
-<style>
-  .inventori {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  section {
+<style lang="scss">
+  section.half {
     width: 50%;
-    min-width: 300px;
+    padding: 10px;
+  }
+  section.third {
+    width: calc(100% / 3);
+    padding: 10px;
+  }
+  section.two-third {
+    width: calc(100% / 3 * 2);
+    padding: 10px;
+  }
+  section.quarter {
+    width: 25%;
     padding: 10px;
   }
 </style>
