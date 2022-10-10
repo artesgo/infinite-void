@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Input from '$lib/components/input/Input.svelte';
+	import BarCodeScanner from '$lib/components/input/BarCodeScanner.svelte';
+  import Input from '$lib/components/input/Input.svelte';
 	import Select from '$lib/components/input/Select.svelte';
 	import { appState } from '$lib/store/app';
 	import AddToStore from '../AddToStore.svelte';
@@ -11,6 +12,10 @@
   let shelf: number;
   let level: number;
   let price: number;
+
+  function onErr(err: { detail: string }) {
+    console.warn(err);
+  }
 </script>
 
 <svelte:head>
@@ -37,6 +42,10 @@
         label={'Brand'}
       />
     </section>
+  </div>
+
+  <div class='flex'>
+    <BarCodeScanner bind:value={$appState.product.sku} on:err={onErr} />
   </div>
 
   <!-- product weight -->

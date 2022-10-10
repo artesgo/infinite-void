@@ -45,10 +45,6 @@
   function viewProduct(product: Product) {
     $appState.product = product;
   }
-  
-  function onScan(event: { detail: string }) {
-    sku = event.detail;
-  }
 
   function onErr(err: { detail: string }) {
     console.warn(err);
@@ -113,7 +109,7 @@
 </div>
 <div class='flex'>
   <section>
-    <BarCodeScanner on:code={onScan} on:err={onErr} />
+    <BarCodeScanner bind:value={sku} on:err={onErr} />
   </section>
 </div>
 

@@ -2,12 +2,17 @@
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { Html5QrcodeScanner } from 'html5-qrcode';
 	import Device from 'svelte-device-info';
+	import Button from '../cta/Button.svelte';
 
 	let html5QrcodeScanner;
 	let dispatch = createEventDispatcher();
+  let scan = false;
+
+  export let value;
 
 	function onScanSuccess(decodedText: string, decodedResult: any) {
 		dispatch('code', decodedText);
+    value = decodedText;
 	}
 
 	function onScanFailure(err: any) {
@@ -15,10 +20,10 @@
 	}
 
 	onMount(() => {
-    bindScan();
+    initScanner();
 	});
 
-  function bindScan() {
+  function initScanner() {
     let scanTypes = [0,1];
 		if (Device.isMobile || Device.isPhone || Device.isTablet) {
       html5QrcodeScanner = new Html5QrcodeScanner(
@@ -37,6 +42,13 @@
       html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 		}
   }
+
+  function toggleScanner() {
+    scan = !scan;
+  }
 </script>
 
 <div id="reader" />
+{#if !scan}
+<Button on:click={() => toggleScanner()}>Scan</Button>
+{/if}
