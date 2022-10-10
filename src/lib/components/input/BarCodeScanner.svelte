@@ -27,7 +27,7 @@
         {
           fps: 30,
           qrbox: { width: 320, height: 240 },
-          supportedScanTypes: scanTypes,
+          // supportedScanTypes: scanTypes,
           rememberLastUsedCamera: true
         },
         false
