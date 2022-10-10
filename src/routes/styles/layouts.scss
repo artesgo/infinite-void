@@ -1,0 +1,16 @@
+section.half {
+  width: 50%;
+  padding: 10px;
+}
+section.third {
+  width: calc(100% / 3);
+  padding: 10px;
+}
+section.two-third {
+  width: calc(100% / 3 * 2);
+  padding: 10px;
+}
+section.quarter {
+  width: 25%;
+  padding: 10px;
+}

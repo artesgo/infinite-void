@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { appState } from '$lib/store/app';
-	import { onMount } from 'svelte';
 	import { ProductClient } from "$lib/client/supabase.product";
 	import { products } from '$lib/store/products';
 	import Button from '$lib/components/cta/Button.svelte';
@@ -10,6 +9,7 @@
 	import Table from '$lib/components/layout/Table.svelte';
   import type { Product } from "$lib/model/product";
 	import BarCodeScanner from '$lib/components/input/BarCodeScanner.svelte';
+	import { weights } from './_product';
 
   // TODO: 
   // Call API and save item to db
@@ -39,28 +39,11 @@
     const product = { name, brand, weight, weight_unit, sku };
     let products$ = ProductClient.findProducts(product) as Promise<Product[]>;
     let response = await products$;
-    console.log(response);
-    
     $products = [...response];
   }
 
   function viewProduct(product: Product) {
     $appState.product = product;
-  }
-
-  function saveProduct(product: Product) {
-    ProductClient.updateProduct(product);
-  }
-
-  enum weights {
-    "g" = "gram (g)",
-    "ml" = "millilitre (ml)",
-    "u" = "Units (Pieces, Tablets, etc...)",
-    "ea" = "Each",
-    "lb" = "pound (lb)",
-    "oz" = "ounce (oz)",
-    "L" = "litre (L)",
-    "kg" = "kilogram (kg)",
   }
   
   function onScan(code: string) {
@@ -71,6 +54,10 @@
     console.warn(err);
   }
 </script>
+
+<svelte:head>
+  <title>Product Info</title>
+</svelte:head>
 
 <h1>Product List</h1>
 <div class='flex wrap'>
@@ -99,17 +86,17 @@
       placeholder="enter the product's weight"
       type={'number'}
       id={'p-weight'}
-      label={'Product Weight'}
+      label={'Weight'}
     />
     <Select id={"p-units"} bind:value={weight_unit} disabled={!weight}>
-      <option value="g">{weights['g']}</option>
-      <option value="ml">{weights['ml']}</option>
-      <option value="u">{weights['u']}</option>
-      <option value="ea">{weights['ea']}</option>
-      <option value="lb">{weights['lb']}</option>
-      <option value="oz">{weights['oz']}</option>
-      <option value="L">{weights['L']}</option>
-      <option value="kg">{weights['kg']}</option>
+      <option value="g">{weights.get('g')}</option>
+      <option value="ml">{weights.get('ml')}</option>
+      <option value="u">{weights.get('u')}</option>
+      <option value="ea">{weights.get('ea')}</option>
+      <option value="lb">{weights.get('lb')}</option>
+      <option value="oz">{weights.get('oz')}</option>
+      <option value="L">{weights.get('L')}</option>
+      <option value="kg">{weights.get('kg')}</option>
     </Select>
   </section>
 </div>
@@ -145,30 +132,10 @@
         <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{p.weight || ''}</Link>
       </td>
       <td>
-        <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{p.weight_unit || ''}</Link>
+        <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{weights.get(p.weight_unit || '')}</Link>
       </td>
       <td class="flex justify-center">
-        <Button on:click={() => saveProduct(p)}>Save</Button>
       </td>
     </tr>
   {/each}
 </Table>
-
-<style lang="scss">
-  section.half {
-    width: 50%;
-    padding: 10px;
-  }
-  section.third {
-    width: calc(100% / 3);
-    padding: 10px;
-  }
-  section.two-third {
-    width: calc(100% / 3 * 2);
-    padding: 10px;
-  }
-  section.quarter {
-    width: 25%;
-    padding: 10px;
-  }
-</style>

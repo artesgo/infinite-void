@@ -12,6 +12,15 @@
   &-end {
     justify-content: flex-end;
   }
+  &-between {
+    justify-content: space-between;
+  }
+  &-around {
+    justify-content: space-around;
+  }
+  &-evenly {
+    justify-content: space-evenly;
+  }
 }
 
 .align {

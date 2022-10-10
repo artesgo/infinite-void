@@ -3,7 +3,7 @@
 
   export let type = 'text';
   export let id: string;
-  export let value = '';
+  export let value: string | number | undefined;
   export let label = '';
   export let required = false;
   export let placeholder = 'placeholder';

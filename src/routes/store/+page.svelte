@@ -53,6 +53,10 @@
   @use './store';
 </style>
 
+<svelte:head>
+  <title>Store Info</title>
+</svelte:head>
+
 <h1>Store Selection</h1>
 <div class='inventori'>
   <section class="what">

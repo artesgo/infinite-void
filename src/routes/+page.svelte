@@ -1,6 +1,11 @@
 <script>
 	import Button from "$lib/components/cta/Button.svelte";
 </script>
+
+<svelte:head>
+  <title>The Void</title>
+</svelte:head>
+
 <!-- TODO: Find User Store -->
 <h1>Salutations..</h1>
 <p>If this is your first time, please find and set your closest or preferred source of sustenance...</p>

@@ -9,7 +9,7 @@
 </label>
 <select
   {id}
-  {value}
+  bind:value={value}
   {disabled}
   on:focus
   on:blur

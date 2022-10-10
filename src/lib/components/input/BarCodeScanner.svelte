@@ -28,10 +28,7 @@
     let scanTypes = [0,1];
 		if (Device.isMobile || Device.isPhone || Device.isTablet) {
       isMobile = true;
-    } else {
-      scanTypes = [1];
-		}
-    html5QrcodeScanner = new Html5QrcodeScanner(
+      html5QrcodeScanner = new Html5QrcodeScanner(
         'reader',
         {
           fps: 30,
@@ -42,6 +39,7 @@
         false
       );
       html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+		}
   }
 </script>
 
