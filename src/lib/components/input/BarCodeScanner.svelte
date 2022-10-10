@@ -7,6 +7,7 @@
 	let html5QrcodeScanner;
 	let dispatch = createEventDispatcher();
   let scan = false;
+  let mobile = false;
 
   export let value;
 
@@ -26,6 +27,7 @@
   function initScanner() {
     let scanTypes = [0,1];
 		if (Device.isMobile || Device.isPhone || Device.isTablet) {
+      mobile = true;
       html5QrcodeScanner = new Html5QrcodeScanner(
         'reader',
         {
@@ -49,6 +51,6 @@
 </script>
 
 <div id="reader" />
-{#if !scan}
+{#if !scan && mobile}
 <Button on:click={() => toggleScanner()}>Scan</Button>
 {/if}
