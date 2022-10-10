@@ -32,7 +32,7 @@
         'reader',
         {
           fps: 30,
-          qrbox: { width: 250, height: 250 },
+          qrbox: { width: 400, height: 400 },
           supportedScanTypes: scanTypes,
           rememberLastUsedCamera: true
         },
