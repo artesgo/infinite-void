@@ -1,68 +1,40 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
-	// import { Html5QrcodeScanner } from 'html5-qrcode';
+	import { Html5QrcodeScanner } from 'html5-qrcode';
 	import Device from 'svelte-device-info';
-  import Quagga from 'quagga';
-	import Button from '../cta/Button.svelte';
 
-	let dispatch = createEventDispatcher();
-  let isMobile = false;
-	function onScanSuccess(decodedText: string) {
-		dispatch('code', decodedText);
-    console.log(decodedText);
+	let html5QrcodeScanner;
+	let scan = createEventDispatcher();
+	let error = createEventDispatcher();
+
+	function onScanSuccess(decodedText: string, decodedResult: any) {
+		scan(decodedText);
 	}
 
 	function onScanFailure(err: any) {
-		dispatch('err', err);
+		error(err);
 	}
 
 	onMount(() => {
-    initScanner();
+    bindScan();
 	});
 
-  function initScanner() {
+  function bindScan() {
+    let scanTypes = [0,1];
 		if (Device.isMobile || Device.isPhone || Device.isTablet) {
-      isMobile = true;
-      Quagga.init({
-        inputStream: {
-          name: 'barcode scanner',
-          type: 'ImageStream',
-          target: '#reader'
+      html5QrcodeScanner = new Html5QrcodeScanner(
+        'reader',
+        {
+          fps: 30,
+          qrbox: { width: 320, height: 240 },
+          supportedScanTypes: scanTypes,
+          rememberLastUsedCamera: true
         },
-        debug: {
-          drawBoundingBox: true,
-          showFrequency: true,
-          drawScanline: true,
-          showPattern: true,
-          showCanvas: false,
-        },
-        decoder: { readers: ['code_128_reader']}
-      }, initQuagga)
+        false
+      );
+      html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 		}
-  }
-
-  function initQuagga(err: any) {
-    if (err) {
-      console.log(err);
-      return
-    }
-    console.log("Initialization finished. Ready to start");
-    Quagga.start();
-  }
-
-  function decodeSingle() {
-    Quagga.decodeSingle(onScanSuccess);
   }
 </script>
 
 <div id="reader" />
-
-{#if isMobile}
-<Button on:click={decodeSingle}>Scan</Button>
-{/if}
-
-<style>
-  #reader {
-    width: 100%;
-  }
-</style>
