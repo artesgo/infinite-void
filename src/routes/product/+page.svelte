@@ -46,11 +46,11 @@
     $appState.product = product;
   }
   
-  function onScan(code: string) {
-    sku = code;
+  function onScan(event: { detail: string }) {
+    sku = event.detail;
   }
 
-  function onErr(err: any) {
+  function onErr(err: { detail: string }) {
     console.warn(err);
   }
 </script>
@@ -113,7 +113,7 @@
 </div>
 <div class='flex'>
   <section>
-    <BarCodeScanner scan={onScan} error={onErr} />
+    <BarCodeScanner on:code={onScan} on:err={onErr} />
   </section>
 </div>
 
