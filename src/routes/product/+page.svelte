@@ -110,8 +110,9 @@
       label={'Product SKU'}
     />
   </section>
-
-  <section class="half">
+</div>
+<div class='flex'>
+  <section>
     <BarCodeScanner scan={onScan} error={onErr} />
   </section>
 </div>
