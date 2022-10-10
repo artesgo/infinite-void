@@ -26,8 +26,15 @@
       Quagga.init({
         inputStream: {
           name: 'barcode scanner',
-          type: 'LiveStream',
+          type: 'ImageStream',
           target: '#reader'
+        },
+        debug: {
+          drawBoundingBox: true,
+          showFrequency: true,
+          drawScanline: true,
+          showPattern: true,
+          showCanvas: false,
         },
         decoder: { readers: ['code_128_reader']}
       }, initQuagga)
@@ -53,3 +60,9 @@
 {#if isMobile}
 <Button on:click={decodeSingle}>Scan</Button>
 {/if}
+
+<style>
+  #reader {
+    width: 100%;
+  }
+</style>
