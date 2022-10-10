@@ -4,15 +4,14 @@
 	import Device from 'svelte-device-info';
 
 	let html5QrcodeScanner;
-	let scan = createEventDispatcher();
-	let error = createEventDispatcher();
+	let dispatch = createEventDispatcher();
 
 	function onScanSuccess(decodedText: string, decodedResult: any) {
-		scan(decodedText);
+		dispatch('code', decodedText);
 	}
 
 	function onScanFailure(err: any) {
-		error(err);
+		dispatch('err', err);
 	}
 
 	onMount(() => {
