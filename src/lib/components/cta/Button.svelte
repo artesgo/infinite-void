@@ -4,6 +4,7 @@
   on:blur
   on:mouseover
   on:mouseout
+  type="button"
 ><slot></slot></button>
 
 <style lang="scss">
