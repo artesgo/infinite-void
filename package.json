@@ -38,6 +38,7 @@
 		"artesgo-flox": "^1.0.1-alpha.7",
 		"dotenv": "^16.0.2",
 		"html5-qrcode": "^2.2.1",
+		"quagga": "^0.12.1",
 		"svelte-device-info": "^1.0.0",
 		"uuid": "^9.0.0"
 	}
