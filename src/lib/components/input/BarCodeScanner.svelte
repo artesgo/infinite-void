@@ -26,10 +26,13 @@
         {
           fps: 30,
           qrbox: { width: 320, height: 240 },
-          // supportedScanTypes: scanTypes,
-          rememberLastUsedCamera: true
+          supportedScanTypes: scanTypes,
+          rememberLastUsedCamera: true,
+          experimentalFeatures: {
+            useBarCodeDetectorIfSupported: true
+          }
         },
-        false
+        false,
       );
       html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 		}
