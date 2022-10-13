@@ -98,7 +98,7 @@
   </div>
 
   {@const product = $appState.product}
-  <div class='flex justify-between'>
+  <div class='pl-1 pr-1 mb-2 flex justify-between'>
     <Save {product} />
     <Delete {product} />
   </div>

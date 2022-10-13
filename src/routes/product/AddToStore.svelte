@@ -42,7 +42,7 @@
  
 <Button on:click={() => addToStore()}>
   {#if stock}
-    Update Store
+    Update Stock Information
   {:else}
     Add To Store
   {/if}

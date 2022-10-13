@@ -1,0 +1,30 @@
+@use './variables.scss' as v;
+
+@for $i from 1 through 8 {
+  .pl-#{$i} {
+    padding-left: $i * v.$unit;
+  }
+  .pr-#{$i} {
+    padding-right: $i * v.$unit;
+  }
+  .pt-#{$i} {
+    padding-top: $i * v.$unit;
+  }
+  .pb-#{$i} {
+    padding-bottom: $i * v.$unit;
+  }
+
+
+  .ml-#{$i} {
+    margin-left: $i * v.$unit;
+  }
+  .mr-#{$i} {
+    margin-right: $i * v.$unit;
+  }
+  .mt-#{$i} {
+    margin-top: $i * v.$unit;
+  }
+  .mb-#{$i} {
+    margin-bottom: $i * v.$unit;
+  }
+}

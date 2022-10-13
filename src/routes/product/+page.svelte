@@ -1,16 +1,17 @@
 <script lang="ts">
-	import { stockStore } from '$lib/store/stock';
 	import { appState } from '$lib/store/app';
 	import { ProductClient } from "$lib/client/supabase.product";
 	import { products } from '$lib/store/products';
+	import { stockStore } from '$lib/store/stock';
+	import { weights } from './_product';
+	import BarCodeScanner from '$lib/components/input/BarCodeScanner.svelte';
 	import Button from '$lib/components/cta/Button.svelte';
+	import Checkbox from '$lib/components/input/Checkbox.svelte';
 	import Input from '$lib/components/input/Input.svelte';
 	import Link from '$lib/components/nav/Link.svelte';
 	import Select from '$lib/components/input/Select.svelte';
 	import Table from '$lib/components/layout/Table.svelte';
   import type { Product } from "$lib/model/product";
-	import BarCodeScanner from '$lib/components/input/BarCodeScanner.svelte';
-	import { weights } from './_product';
 
   // TODO: 
   // Call API and save item to db
@@ -20,6 +21,7 @@
   let name = '';
   let searching = false;
   let sku = '';
+  let homeStore = false;
   let weight_unit = '';
   let weight = '';
   let headers = [
@@ -61,6 +63,13 @@
   function onErr(err: { detail: string }) {
     console.warn(err);
   }
+
+  $: filtered = [...$products.filter(p =>{
+    if (homeStore) {
+      return $stockStore.findIndex(stk => $appState.myStore?.id === stk.storeId && stk.productId === p.id) > -1
+    }
+    return p;
+  })];
 </script>
 
 <svelte:head>
@@ -118,6 +127,12 @@
       label={'Product SKU'}
     />
   </section>
+  <section class="half">
+    <Checkbox
+      bind:checked={homeStore}
+      id={'p-home-store'}
+    >Show only home store</Checkbox>
+  </section>
 </div>
 <div class='flex'>
   <section>
@@ -125,12 +140,14 @@
   </section>
 </div>
 
-<Button on:click={find}>Find</Button>
-<Button on:click={add}>Add Product</Button>
-<Button on:click={clear}>Clear Inputs</Button>
+<div class='pl-1 pr-1'>
+  <Button on:click={find}>Find</Button>
+  <Button on:click={add}>Add Product</Button>
+  <Button on:click={clear}>Clear Inputs</Button>
+</div>
 
-<Table {headers} caption={'We found ' + $products.length + ' matching products'}>
-  {#each $products as p (p.id)}
+<Table {headers} caption={'We found ' + filtered.length + ' matching products'}>
+  {#each filtered as p (p.id)}
     {@const myStore = $appState.myStore}
     {@const stock = $stockStore.find(s => s.productId === p.id && s.storeId === myStore?.id)}
     <tr>

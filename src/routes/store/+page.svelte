@@ -95,7 +95,7 @@
   </section>
 </div>
 
-<div>
+<div class="pl-1 pr-1">
   <Button on:click={find}>Find</Button>
 </div>
 
