@@ -1,19 +1,20 @@
 <script lang="ts">
+	import { stockStore } from '$lib/store/stock';
 	import { appState } from '$lib/store/app';
+	import { StockClient } from '$lib/client/supabase.stock';
 	import Button from '$lib/components/cta/Button.svelte';
 	import type { Product } from '$lib/model/product';
-	import { StockClient } from '$lib/client/supabase.stock';
 	import type { Stock } from '$lib/model/stock';
 
-  export let product: Product;
   export let aisle: number;
-  export let shelf: number;
   export let level: number;
   export let price: number;
+  export let product: Product;
+  export let shelf: number;
+  export let stock: Stock | undefined;
 
   function addToStore() {
-    // TODO: delete from db
-    let stock: Stock = {
+    let _stock: Stock = {
       storeId: $appState.myStore?.id as string,
       productId: product.id,
       aisle,
@@ -22,8 +23,27 @@
       price,
       updated: new Date()
     }
-    StockClient.addStock(stock);
+    if (!stock) {
+      StockClient.addStock(_stock);
+    } else {
+      StockClient.updateStock(_stock);
+      $stockStore = [...$stockStore.map(s => {
+        if (s.productId === _stock.productId) {
+          s.aisle = aisle;
+          s.level = level;
+          s.price = price;
+          s.shelf = shelf;
+        }
+        return s;
+      })]
+    }
   }
 </script>
  
-<Button on:click={() => addToStore()}>Add To Store</Button>
+<Button on:click={() => addToStore()}>
+  {#if stock}
+    Update Store
+  {:else}
+    Add To Store
+  {/if}
+</Button>

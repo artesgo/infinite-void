@@ -11,4 +11,4 @@
   }
 </script>
 
-<Button on:click={() => deleteStore()}>Delete Store</Button>
+<Button on:click={() => deleteStore()}>Confirm Delete Store</Button>

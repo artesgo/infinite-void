@@ -6,22 +6,16 @@ export class StockClient {
 
 	// adds an item to the store
 	static async addStock(stock: Stock) {
-		if (!stock.productId && !stock.storeId) {
-			trimProps(stock);
-			const { data, error } = await supabase.from<Stock>('stock')
-				.insert(stock);
-	
-			warnError(error);
-			return data;
-		} else {
-			// 
-			trimProps(stock);
-			return StockClient.updateStock(stock);
-		}
+		trimProps(stock);
+		const { data, error } = await supabase.from<Stock>('stock')
+			.insert(stock);
+		warnError(error);
+		return data;
 	}
 	
 	// updates an item in the store
 	static async updateStock(stock: Stock) {
+		trimProps(stock);
 		const { data, error } = await supabase.from<Stock>('stock')
 			.update(stock)
 			.match({ storeId: stock.storeId, productId: stock.productId });

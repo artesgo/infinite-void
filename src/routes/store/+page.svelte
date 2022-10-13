@@ -1,12 +1,15 @@
 <script lang="ts">
-	import { stores } from '$lib/store/stores';
-	import type { Store } from "$lib/model/store";
-	import { StoreClient } from "$lib/client/supabase.store";
-	import Button from "$lib/components/cta/Button.svelte";
-	import Link from "$lib/components/nav/Link.svelte";
 	import { appState } from "$lib/store/app";
+	import { onMount } from "svelte";
+	import { stockStore } from '$lib/store/stock';
+	import { StockClient } from '$lib/client/supabase.stock';
+	import { StoreClient } from "$lib/client/supabase.store";
+	import { stores } from '$lib/store/stores';
+	import Button from "$lib/components/cta/Button.svelte";
 	import Input from '$lib/components/input/Input.svelte';
+	import Link from "$lib/components/nav/Link.svelte";
 	import Table from '$lib/components/layout/Table.svelte';
+	import type { Store } from "$lib/model/store";
 
   // TODO: 
   // Call API and save item to db
@@ -27,6 +30,12 @@
 
   function selectStore(store: Store) {
     $appState.myStore = store;
+    if (store.id) {
+      localStorage.setItem('storeId', store.id );
+      localStorage.setItem('storeName', store.name );
+      localStorage.setItem('storeAddress', store.address );
+      localStorage.setItem('storeCity', store.city );
+    }
   }
 
   function viewStore(store: Store) {
@@ -40,6 +49,19 @@
     $stores = [...response];
   }
 
+  async function getStockInfo() {
+    if (!$appState.myStore) {
+      return;
+    }
+    let stock$ = StockClient.findStock({
+      storeId: $appState.myStore.id,
+    });
+    let response = await stock$;
+    if (response?.length) {
+      $stockStore = [...response];
+    }
+  }
+
   $: hasRequired = store.name && store.address && store.city;
   let headers = [
     'Name',
@@ -47,6 +69,10 @@
     'City',
     'Select',
   ]
+
+  onMount(() => {
+    getStockInfo();
+  });
 </script>
 
 <style lang="scss">

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { stockStore } from '$lib/store/stock';
 	import { appState } from '$lib/store/app';
 	import { ProductClient } from "$lib/client/supabase.product";
 	import { products } from '$lib/store/products';
@@ -26,12 +27,23 @@
     'Brand',
     'Weight',
     'Unit',
-    'Action'
+    'Aisle',
+    'Shelf',
+    'Level',
+    'Price',
   ];
 
   function add() {
     const product = { name, brand, weight, weight_unit, sku };
     ProductClient.addProduct(product);
+  }
+
+  function clear() {
+    brand = '';
+    name = '';
+    sku = '';
+    weight_unit = '';
+    weight = '';
   }
 
   async function find() {
@@ -60,19 +72,19 @@
   <section class="two-third">
     <!-- save to product table -->
     <Input
-      bind:value={name}
-      placeholder="enter the product's name"
-      type={'text'}
-      id={'p-name'}
-      label={'Product Name'}
-      required={true}
-    />
-    <Input
       bind:value={brand}
       placeholder="enter the product's brand"
       type={'text'}
       id={'p-brand'}
       label={'Product Brand'}
+      required={true}
+    />
+    <Input
+      bind:value={name}
+      placeholder="enter the product's name"
+      type={'text'}
+      id={'p-name'}
+      label={'Product Name'}
       required={true}
     />
   </section>
@@ -115,9 +127,12 @@
 
 <Button on:click={find}>Find</Button>
 <Button on:click={add}>Add Product</Button>
+<Button on:click={clear}>Clear Inputs</Button>
 
-<Table {headers} caption={'We found these Products...'}>
+<Table {headers} caption={'We found ' + $products.length + ' matching products'}>
   {#each $products as p (p.id)}
+    {@const myStore = $appState.myStore}
+    {@const stock = $stockStore.find(s => s.productId === p.id && s.storeId === myStore?.id)}
     <tr>
       <td>
         <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{p.name}</Link>
@@ -131,8 +146,12 @@
       <td>
         <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{weights.get(p.weight_unit || '')}</Link>
       </td>
-      <td class="flex justify-center">
-      </td>
+      {#if stock}
+      <td>{stock.aisle || ''}</td>
+      <td>{stock.shelf || ''}</td>
+      <td>{stock.level || ''}</td>
+      <td>${stock.price || ''}</td>
+      {/if}
     </tr>
   {/each}
 </Table>

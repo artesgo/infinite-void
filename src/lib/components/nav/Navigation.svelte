@@ -7,7 +7,7 @@
     <Link href="/">Home</Link>
     <Link href="/store">Stores</Link>
     <Link href="/product">Products</Link>
-    <Link href="/map">Map</Link>
+    <!-- <Link href="/map">Map</Link> -->
     <Link href={"/about"}>About</Link>
   </nav>
   <nav>

@@ -1,4 +1,5 @@
 <script>
+	import { appState } from '$lib/store/app';
 	import { onMount } from "svelte";
 	import { theme } from "$lib/store/theme";
 	import Footer from "$lib/components/nav/Footer.svelte";
@@ -10,6 +11,14 @@
     if (t) {
       $theme = t;
     }
+    if (localStorage.getItem('storeId')) {
+      $appState.myStore = {
+        id: localStorage.getItem('storeId') || '',
+        name: localStorage.getItem('storeName') || '',
+        address: localStorage.getItem('storeAddress') || '',
+        city: localStorage.getItem('storeCity') || '',
+      }
+    }
   })
 </script>
 
@@ -17,4 +26,4 @@
 <main>
   <slot></slot>
 </main>
-<Footer></Footer>
+<Footer />

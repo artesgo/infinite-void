@@ -10,8 +10,6 @@ export interface Stock {
 }
 
 export interface StockSearchParams {
-  address?: string;
-  category?: string;
-  city?: string;
-  name?: string;
+  storeId?: string; // search only storeId for inventory of store
+  productId?: string; // search only productId for location of item in different stores
 }
