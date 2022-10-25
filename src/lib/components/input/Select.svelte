@@ -2,9 +2,10 @@
   export let id: string;
   export let value: string | undefined;
   export let disabled = false;
+  export let srOnlyLabel = false;
 </script>
 
-<label for={id}>
+<label for={id} class:sr-only={srOnlyLabel}>
   Weight Unit
 </label>
 <select

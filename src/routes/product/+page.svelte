@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { slide } from 'svelte/transition';
 	import { appState } from '$lib/store/app';
 	import { ProductClient } from "$lib/client/supabase.product";
 	import { products } from '$lib/store/products';
@@ -24,16 +25,24 @@
   let homeStore = false;
   let weight_unit = '';
   let weight = '';
-  let headers = [
+  $: headers = [
+    ...productHeaders,
+    ...$appState.myStore?.id ? stockHeaders : []
+  ];
+
+  let productHeaders = [
     'Name',
     'Brand',
     'Weight',
     'Unit',
+  ]
+
+  let stockHeaders = [
     'Aisle',
     'Shelf',
     'Level',
     'Price',
-  ];
+  ]
 
   function add() {
     const product = { name, brand, weight, weight_unit, sku };
@@ -87,6 +96,7 @@
       id={'p-brand'}
       label={'Product Brand'}
       required={true}
+      srOnlyLabel={true}
     />
     <Input
       bind:value={name}
@@ -95,6 +105,7 @@
       id={'p-name'}
       label={'Product Name'}
       required={true}
+      srOnlyLabel={true}
     />
   </section>
   <section class="third">
@@ -104,8 +115,10 @@
       type={'number'}
       id={'p-weight'}
       label={'Weight'}
+      srOnlyLabel={true}
     />
-    <Select id={"p-units"} bind:value={weight_unit} disabled={!weight}>
+    <Select id={"p-units"} bind:value={weight_unit} disabled={!weight}
+      srOnlyLabel={true}>
       <option value="g">{weights.get('g')}</option>
       <option value="ml">{weights.get('ml')}</option>
       <option value="u">{weights.get('u')}</option>
@@ -125,6 +138,7 @@
       type={'text'}
       id={'p-sku'}
       label={'Product SKU'}
+      srOnlyLabel={true}
     />
   </section>
   <section class="half">
@@ -146,29 +160,33 @@
   <Button on:click={clear}>Clear Inputs</Button>
 </div>
 
-<Table {headers} caption={'We found ' + filtered.length + ' matching products'}>
-  {#each filtered as p (p.id)}
-    {@const myStore = $appState.myStore}
-    {@const stock = $stockStore.find(s => s.productId === p.id && s.storeId === myStore?.id)}
-    <tr>
-      <td>
-        <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{p.name}</Link>
-      </td>
-      <td>
-        <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{p.brand || ''}</Link>
-      </td>
-      <td>
-        <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{p.weight || ''}</Link>
-      </td>
-      <td>
-        <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{weights.get(p.weight_unit || '')}</Link>
-      </td>
-      {#if stock}
-      <td>{stock.aisle || ''}</td>
-      <td>{stock.shelf || ''}</td>
-      <td>{stock.level || ''}</td>
-      <td>${stock.price || ''}</td>
-      {/if}
-    </tr>
-  {/each}
-</Table>
+{#if filtered.length}
+<div transition:slide|local>
+  <Table {headers} caption={'We found ' + filtered.length + ' matching products'}>
+    {#each filtered as p (p.id)}
+      {@const myStore = $appState.myStore}
+      {@const stock = $stockStore.find(s => myStore && s.productId === p.id && s.storeId === myStore.id)}
+      <tr>
+        <td>
+          <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{p.name}</Link>
+        </td>
+        <td>
+          <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{p.brand || ''}</Link>
+        </td>
+        <td>
+          <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{p.weight || ''}</Link>
+        </td>
+        <td>
+          <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{weights.get(p.weight_unit || '')}</Link>
+        </td>
+        {#if stock && myStore}
+        <td>{stock.aisle || ''}</td>
+        <td>{stock.shelf || ''}</td>
+        <td>{stock.level || ''}</td>
+        <td>${stock.price || ''}</td>
+        {/if}
+      </tr>
+    {/each}
+  </Table>
+</div>
+{/if}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { Html5QrcodeScanner } from 'html5-qrcode';
+	import { Html5Qrcode, Html5QrcodeScanner } from 'html5-qrcode';
 	import Device from 'svelte-device-info';
 	import Button from '../cta/Button.svelte';
 
@@ -28,20 +28,28 @@
     let scanTypes = [0,1];
 		if (Device.isMobile || Device.isPhone || Device.isTablet) {
       mobile = true;
+      let config = {
+        fps: 30,
+        qrbox: { width: 320, height: 240 },
+        supportedScanTypes: scanTypes,
+        rememberLastUsedCamera: true,
+        experimentalFeatures: {
+          useBarCodeDetectorIfSupported: true
+        },
+      }
       html5QrcodeScanner = new Html5QrcodeScanner(
         'reader',
-        {
-          fps: 30,
-          qrbox: { width: 320, height: 240 },
-          supportedScanTypes: scanTypes,
-          rememberLastUsedCamera: true,
-          experimentalFeatures: {
-            useBarCodeDetectorIfSupported: true
-          }
-        },
+        config,
         false,
       );
       html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+      // let reader = new Html5Qrcode('reader');
+      // Html5Qrcode.getCameras().then(devices => {
+      //   console.log(devices);
+      // })
+      // reader.start({
+      //   facingMode: 'environment'
+      // }, config, onScanSuccess).then();
 		}
   }
 

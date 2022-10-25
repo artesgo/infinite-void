@@ -9,7 +9,7 @@
 <label for={id}>
   <slot></slot>
   {#if required}<Required />{/if}
+  <input {id} type="checkbox" bind:checked
+    on:focus
+    on:blur />
 </label>
-<input {id} type="checkbox" bind:checked
-  on:focus
-  on:blur />
