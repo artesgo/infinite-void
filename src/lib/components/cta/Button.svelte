@@ -1,3 +1,9 @@
+<script lang="ts">
+  export let type: "primary" | "secondary" | "tertiary" = "primary";
+  export let width: "inline" | "block" = "block";
+  $: classes = `${type} ${width}`;
+</script>
+
 <button
   on:click
   on:focus
@@ -5,14 +11,25 @@
   on:mouseover
   on:mouseout
   type="button"
+  class={classes}
 ><slot></slot></button>
 
 <style lang="scss">
+  @use "../common.scss" as c;
+
   button {
     background: none;
-    font-size: 1.25rem;
     padding: 0 10px;
-    border: 1px solid;
     cursor: pointer;
+
+    @include c.input;
+
+    &.primary {
+      border: 1px solid var(--void);
+    }
+    &.block {
+      display: block;
+      width: 100%;
+    }
   }
 </style>

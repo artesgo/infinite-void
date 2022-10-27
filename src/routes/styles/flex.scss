@@ -1,5 +1,12 @@
+@use './mixins.scss' as m;
+
 .flex {
   display: flex;
+  &-dt {
+    @include m.dt-only() {
+      display: flex;
+    }
+  }
 }
 
 .justify {

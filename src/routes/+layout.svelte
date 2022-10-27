@@ -22,8 +22,15 @@
   })
 </script>
 
-<Navigation />
-<main>
-  <slot></slot>
-</main>
-<Footer />
+<div aria-hidden="true"
+  class="app"
+  class:searing={$theme==='searing'}
+  class:void={$theme==='void'}
+  class:halloween={$theme==='ween'}
+>
+  <Navigation />
+  <main>
+    <slot></slot>
+  </main>
+  <Footer />
+</div>

@@ -13,3 +13,10 @@
     on:focus
     on:blur />
 </label>
+
+<style lang="scss">
+  @use "../common.scss" as c;
+  label {
+    font-size: c.$input-font-size;
+  }
+</style>

@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { Html5Qrcode, Html5QrcodeScanner } from 'html5-qrcode';
+	import { Html5QrcodeScanner } from 'html5-qrcode';
 	import Device from 'svelte-device-info';
-	import Button from '../cta/Button.svelte';
 
 	let html5QrcodeScanner;
 	let dispatch = createEventDispatcher();
-  let scan = false;
   let mobile = false;
 
   export let value;
@@ -43,22 +41,8 @@
         false,
       );
       html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-      // let reader = new Html5Qrcode('reader');
-      // Html5Qrcode.getCameras().then(devices => {
-      //   console.log(devices);
-      // })
-      // reader.start({
-      //   facingMode: 'environment'
-      // }, config, onScanSuccess).then();
 		}
-  }
-
-  function toggleScanner() {
-    scan = !scan;
   }
 </script>
 
 <div id="reader" />
-{#if !scan && mobile}
-<Button on:click={() => toggleScanner()}>Scan</Button>
-{/if}

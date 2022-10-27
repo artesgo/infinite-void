@@ -18,3 +18,15 @@
   <!-- options -->
   <slot></slot>
 </select>
+
+<style lang="scss">
+  @use "../common.scss" as c;
+  label, select {
+    font-size: c.$input-font-size;
+    @include c.input;
+  }
+
+  select {
+    width: 100%;
+  }
+</style>

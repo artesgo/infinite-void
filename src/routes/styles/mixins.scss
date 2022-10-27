@@ -1,0 +1,23 @@
+@mixin query-up($width) {
+  @media screen and (min-width: $width) {
+    @content;
+  }
+}
+
+@mixin query-down($width) {
+  @media screen and (max-width: $width) {
+    @content;
+  }
+}
+
+@mixin dt-only() {
+  @include query-up('768px') {
+    @content;
+  }
+}
+
+@mixin mb-only() {
+  @include query-down('767px') {
+    @content;
+  }
+}

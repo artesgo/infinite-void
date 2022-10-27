@@ -6,7 +6,7 @@
 <a {href} on:click class:inline={inline}>
   <span><slot></slot></span>
   {#if $$slots.default}
-  <span></span>
+    <span></span>
   {/if}
 </a>
 
@@ -16,15 +16,11 @@
     flex-direction: column;
     align-items: center;
     text-decoration: none;
-    color: #333;
     padding: 0 10px;
-    &.inline {
-      font-size: 1.5rem;
-    }
     span:last-child {
       transition: 300ms;
       width: 10px;
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid;
       height: 1px;
     }
   }
@@ -33,7 +29,6 @@
     span:last-child {
       transition: 300ms;
       width: 100%;
-      border-bottom: 1px solid #333;
     }
   }
 </style>

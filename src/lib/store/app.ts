@@ -6,7 +6,6 @@ import { writable } from "svelte/store";
 
 export interface AppState {
   myStore?: Store;
-  store?: Store;
   user?: User;
   stock?: Stock;
   product?: Product;

@@ -1,5 +1,7 @@
 <script>
 	import Link from "./Link.svelte";
+	import Button from "../cta/Button.svelte";
+	import { theme } from "$lib/store/theme";
 </script>
 
 <header>
@@ -10,7 +12,8 @@
     <Link href={"/about"}>About</Link>
   </nav>
   <nav>
-    Themes: Searing Retinas / Stare Into the Void
+    <Button on:click={() => $theme = 'searing'}>Searing Retinas</Button>
+    <Button on:click={() => $theme = 'void'}>Stare Into the Void</Button>
   </nav>
 </header>
 

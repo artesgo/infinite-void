@@ -13,6 +13,7 @@
 	import Select from '$lib/components/input/Select.svelte';
 	import Table from '$lib/components/layout/Table.svelte';
   import type { Product } from "$lib/model/product";
+	import Modal from '$lib/components/overlay/Modal.svelte';
 
   // TODO: 
   // Call API and save item to db
@@ -43,10 +44,15 @@
     'Level',
     'Price',
   ]
+  let modalTrigger: any[] = [];
 
   function add() {
     const product = { name, brand, weight, weight_unit, sku };
     ProductClient.addProduct(product);
+  }
+
+  function save(product: Product) {
+    ProductClient.updateProduct(product);
   }
 
   function clear() {
@@ -86,8 +92,8 @@
 </svelte:head>
 
 <h1>Product List</h1>
-<div class='flex wrap'>
-  <section class="two-third">
+<div class='flex-dt wrap'>
+  <section class="half-dt">
     <!-- save to product table -->
     <Input
       bind:value={brand}
@@ -108,7 +114,7 @@
       srOnlyLabel={true}
     />
   </section>
-  <section class="third">
+  <section class="half-dt">
     <Input
       bind:value={weight}
       placeholder="enter the product's weight"
@@ -130,8 +136,8 @@
     </Select>
   </section>
 </div>
-<div class='flex wrap'>
-  <section class="half">
+<div class='flex-dt wrap'>
+  <section class="half-dt">
     <Input
       bind:value={sku}
       placeholder="product's SKU (Optional)"
@@ -141,7 +147,7 @@
       srOnlyLabel={true}
     />
   </section>
-  <section class="half">
+  <section class="half-dt">
     <Checkbox
       bind:checked={homeStore}
       id={'p-home-store'}
@@ -163,21 +169,34 @@
 {#if filtered.length}
 <div transition:slide|local>
   <Table {headers} caption={'We found ' + filtered.length + ' matching products'}>
-    {#each filtered as p (p.id)}
+    {#each filtered as p, i (p.id)}
       {@const myStore = $appState.myStore}
       {@const stock = $stockStore.find(s => myStore && s.productId === p.id && s.storeId === myStore.id)}
       <tr>
         <td>
-          <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{p.name}</Link>
+          <Modal id={p.id || ''} on:confirm={() => save(p)} bind:openModal={modalTrigger[i]}>
+            <div slot="trigger">{p.name}</div>
+            <div slot="title">{p.name}</div>
+            <div slot="modal">
+              <Input id={'s-name'} label={'store name'} type={'text'} required={true}
+                srOnlyLabel={true} placeholder={'Store Name'} bind:value={p.brand} />
+              <Input id={'s-cate'} label={'category'} type={'text'} required={true}
+                srOnlyLabel={true} placeholder={'Category'} bind:value={p.name} />
+              <Input id={'s-addy'} label={'address'} type={'text'} required={true}
+                srOnlyLabel={true} placeholder={'Address'} bind:value={p.weight} />
+              <Input id={'s-city'} label={'city'} type={'text'} required={true}
+                srOnlyLabel={true} placeholder={'City'} bind:value={p.weight_unit} />
+            </div>
+          </Modal>
         </td>
         <td>
-          <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{p.brand || ''}</Link>
+          <Button on:click={modalTrigger[i]}>{p.brand || ''}</Button>
         </td>
         <td>
-          <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{p.weight || ''}</Link>
+          <Button on:click={modalTrigger[i]}>{p.weight || ''}</Button>
         </td>
         <td>
-          <Link href={'/product/' + p.id} on:click={() => viewProduct(p)}>{weights.get(p.weight_unit || '')}</Link>
+          <Button on:click={modalTrigger[i]}>{weights.get(p.weight_unit || '')}</Button>
         </td>
         {#if stock && myStore}
         <td>{stock.aisle || ''}</td>

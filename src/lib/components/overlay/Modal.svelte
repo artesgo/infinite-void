@@ -5,6 +5,12 @@
   export let id: string;
   export let title: string = "";
   export let closeOnBackdrop = true;
+  export let triggerless = false;
+
+  export const openModal = () => {
+    updateDialog('open', true);
+  }
+
   let open = false;
   let dispatcher = createEventDispatcher();
   function updateDialog(action: 'open' | 'cancel' | 'confirm', _open: boolean) {
@@ -15,19 +21,22 @@
   function noop() { }
 </script>
 
-<Button on:click={() => updateDialog('open', true)}>
-  <slot name="trigger"><!-- optional fallback --></slot>
-</Button>
+{#if !triggerless}
+  <Button on:click={() => updateDialog('open', true)}>
+    <slot name="trigger"><!-- optional fallback --></slot>
+  </Button>
+{/if}
 
 {#if open}
 <div transition:fade on:click|preventDefault={noop}>
   <div class='dialog-backdrop' on:click={() => {
     if (closeOnBackdrop) updateDialog('cancel', false);
   }}></div>
-  <div id="dialog_layer" class="dialogs">
+  <div class="dialogs">
     <div role="dialog"
          aria-labelledby={id}
          aria-modal="true"
+         aria-hidden="false"
          class="hidden">
   
       <h2 id={id} class="dialog_label">
@@ -39,9 +48,7 @@
       </h2>
 
       <div class="dialog_form">
-        <div class="dialog_form_item">
-          <slot name="modal"></slot>
-        </div>
+        <slot name="modal"></slot>
       </div>
 
       <div class="dialog_form_actions">
@@ -181,7 +188,7 @@
 
   // [role="alertdialog"],
   [role="dialog"] {
-    position: absolute;
+    position: fixed;
     padding: 15px;
     top: 2rem;
     left: 50vw;

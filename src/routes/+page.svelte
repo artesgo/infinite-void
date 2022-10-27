@@ -7,7 +7,6 @@
 	import { stores } from '$lib/store/stores';
 	import Button from "$lib/components/cta/Button.svelte";
 	import Input from '$lib/components/input/Input.svelte';
-	import Link from "$lib/components/nav/Link.svelte";
 	import Table from '$lib/components/layout/Table.svelte';
 	import type { Store } from "$lib/model/store";
 	import { slide } from "svelte/transition";
@@ -23,8 +22,8 @@
     address: '',
     city: '',
   };
-
   let searching = false;
+  let modalTrigger: any[] = [];
 
   function add() {
     StoreClient.addStore(store);
@@ -42,10 +41,6 @@
       localStorage.setItem('storeAddress', store.address );
       localStorage.setItem('storeCity', store.city );
     }
-  }
-
-  function viewStore(store: Store) {
-    $appState.store = store;
   }
 
   async function find() {
@@ -81,23 +76,19 @@
   });
 </script>
 
-<style lang="scss">
-  @use './store';
-</style>
-
 <svelte:head>
   <title>Store Info</title>
 </svelte:head>
 
 <h1>Store Selection</h1>
-<div class='inventori'>
-  <section class="what">
+<div class='flex-dt'>
+  <section class="half-dt">
     <Input id={'s-name'} label={'store name'} type={'text'} required={true}
       srOnlyLabel={true} placeholder={'Store Name'} bind:value={store.name} />
     <Input id={'s-cate'} label={'category'} type={'text'} required={true}
       srOnlyLabel={true} placeholder={'Category'} bind:value={store.category} />
   </section>
-  <section class="where">
+  <section class="half-dt">
     <Input id={'s-addy'} label={'address'} type={'text'} required={true}
       srOnlyLabel={true} placeholder={'Address'} bind:value={store.address} />
     <Input id={'s-city'} label={'city'} type={'text'} required={true}
@@ -110,12 +101,12 @@
 </div>
 
 {#if $stores && $stores.length > 0}
-<div transition:slide|local>
+<div transition:slide|local >
   <Table {headers} caption={'We found these stores...'}>
-    {#each $stores as s (s.id)}
+    {#each $stores as s, i (s.id)}
       <tr>
-        <td><Link on:click={() => viewStore(s)}>
-          <Modal id={s.id || ''} on:confirm={() => save(s)}>
+        <td>
+          <Modal id={s.id || ''} on:confirm={() => save(s)} bind:openModal={modalTrigger[i]}>
             <div slot="trigger">{s.name}</div>
             <div slot="title">{s.name}</div>
             <div slot="modal">
@@ -129,13 +120,13 @@
                 srOnlyLabel={true} placeholder={'City'} bind:value={s.city} />
             </div>
           </Modal>
-        </Link></td>
-        <td><Link href={'/store/' + s.id} on:click={() => viewStore(s)}>
-          {s.address}
-        </Link></td>
-        <td><Link href={'/store/' + s.id} on:click={() => viewStore(s)}>
-          {s.city}
-        </Link></td>
+        </td>
+        <td>
+          <Button on:click={modalTrigger[i]}>{s.address}</Button>
+        </td>
+        <td>
+          <Button on:click={modalTrigger[i]}>{s.city}</Button>
+        </td>
         <td>
           <div class='flex justify-center'>
             {#if $appState.myStore && $appState.myStore.id === s.id}
