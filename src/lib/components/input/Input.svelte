@@ -8,9 +8,10 @@
   export let required = false;
   export let placeholder = 'placeholder';
   export let pattern = '';
+  export let autocomplete: 'on' | 'off' = 'off';
   export let srOnlyLabel = false;
   $: props = {
-    id, required, placeholder, pattern
+    id, required, placeholder, pattern, autocomplete
   }
 </script>
 
@@ -36,8 +37,6 @@
 </div>
 
 <style lang="scss">
-  @use "../common.scss" as c;
-
   label {
     display: flex;
     justify-content: flex-start;
@@ -46,10 +45,17 @@
     margin-right: 1rem;
   }
   input {
-    font-size: c.$input-font-size;
     border: 1px solid;
-    @include c.input;
     padding: 0 10px;
+    font-size: var(--controlFontSize);
+    height: var(--controlHeight);
+    color: var(--fg);
+    background-color: var(--light-bg);
+    transition: var(--animLength);
+
+    &::placeholder {
+      color: var(--placeholder);
+    }
   }
   div, input {
     width: 100%;

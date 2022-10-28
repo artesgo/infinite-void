@@ -15,8 +15,7 @@
 </label>
 
 <style lang="scss">
-  @use "../common.scss" as c;
   label {
-    font-size: c.$input-font-size;
+    font-size: var(--controlFontSize);
   }
 </style>

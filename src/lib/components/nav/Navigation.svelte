@@ -21,11 +21,13 @@
   header {
     display: flex;
     justify-content: space-between;
+    height: 40px;
   }
 
   nav {
     margin: 10px;
     display: flex;
-    font-size: 1.25rem;
+    height: 30px;
+    align-items: center;
   }
 </style>

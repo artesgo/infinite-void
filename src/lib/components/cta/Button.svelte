@@ -15,15 +15,16 @@
 ><slot></slot></button>
 
 <style lang="scss">
-  @use "../common.scss" as c;
-
   button {
     background: none;
     padding: 0 10px;
     cursor: pointer;
     white-space: nowrap;
 
-    @include c.input;
+    color: var(--fg);
+    background-color: var(--light-bg);
+    transition: var(--animLength);
+    height: var(--controlHeight);
 
     &.primary {
       border: 1px solid var(--void);

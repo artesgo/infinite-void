@@ -13,7 +13,7 @@ body {
 }
 
 p {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 }
 
 main {
@@ -26,6 +26,9 @@ main {
 .app {
   min-height: 100vh;
   --animLength: 0ms;
+  --controlHeight: 30px;
+  --controlFontSize: 1.2rem;
+
   &.loaded {
     --animLength: 1000ms;
   }
@@ -47,21 +50,6 @@ main {
   background: var(--bg);
   color: var(--fg);
   transition: var(--animLength);
-
-  & input,
-  & select,
-  & option,
-  & button,
-  & a,
-  & a:visited {
-    color: var(--fg);
-    background-color: var(--light-bg);
-    transition: var(--animLength);
-  }
-  & input::placeholder,
-  & select::placeholder {
-    color: var(--placeholder);;
-  }
 }
 
 /* width */

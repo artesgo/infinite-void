@@ -23,6 +23,11 @@
       border-bottom: 1px solid;
       height: 1px;
     }
+    color: var(--fg);
+    transition: var(--animLength);
+    &:visited {
+      color: var(--fg);
+    }
   }
 
   a:hover {
