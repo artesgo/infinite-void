@@ -12,8 +12,8 @@
     <Link href={"/about"}>About</Link>
   </nav>
   <nav>
-    <Button on:click={() => $theme = 'searing'}>Searing Retinas</Button>
-    <Button on:click={() => $theme = 'void'}>Stare Into the Void</Button>
+    <Button on:click={() => theme.setTheme('searing')}>Searing Retinas</Button>
+    <Button on:click={() => theme.setTheme('void')}>See Into the Void</Button>
   </nav>
 </header>
 

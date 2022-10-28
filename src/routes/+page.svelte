@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { appState } from "$lib/store/app";
 	import { onMount } from "svelte";
-	import { stockStore } from '$lib/store/stock';
+	import { slide } from "svelte/transition";
 	import { StockClient } from '$lib/client/supabase.stock';
+	import { stockStore } from '$lib/store/stock';
 	import { StoreClient } from "$lib/client/supabase.store";
 	import { stores } from '$lib/store/stores';
+
 	import Button from "$lib/components/cta/Button.svelte";
 	import Input from '$lib/components/input/Input.svelte';
+	import Modal from "$lib/components/overlay/Modal.svelte";
 	import Table from '$lib/components/layout/Table.svelte';
 	import type { Store } from "$lib/model/store";
-	import { slide } from "svelte/transition";
-	import Modal from "$lib/components/overlay/Modal.svelte";
 
   // TODO: 
   // Call API and save item to db

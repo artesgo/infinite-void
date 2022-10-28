@@ -25,7 +25,10 @@ main {
 
 .app {
   min-height: 100vh;
-  --animLength: 1000ms;
+  --animLength: 0ms;
+  &.loaded {
+    --animLength: 1000ms;
+  }
   &.searing {
     --placeholder: #F30;
     --bg: #ededed;

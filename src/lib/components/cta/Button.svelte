@@ -21,6 +21,7 @@
     background: none;
     padding: 0 10px;
     cursor: pointer;
+    white-space: nowrap;
 
     @include c.input;
 
