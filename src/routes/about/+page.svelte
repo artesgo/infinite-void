@@ -9,16 +9,10 @@
 
 <p>
   You're looking for that one thing, but it's nowhere to be found.
-  Is it out of stock? 
-  Don't know what the label even looks like?
+  Is it out of stock?
   <img href="" alt="confused.jpg">
 </p>
 
 <p>
-  If you've been around for any amount of time. You'll know that the layout of stores are by design. To promote this wandering behaviour.
-  <img href="" alt="confused.jpg">
-</p>
-
-<p>
-  Sure, the aisles will sometimes have signs but they only help so much.
+  Stores are like this by design. To promote this wandering behaviour. The aisles can have signs but they only help so much.
 </p>

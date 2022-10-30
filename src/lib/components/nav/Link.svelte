@@ -1,9 +1,12 @@
 <script>
+	import { page } from '$app/stores';
   export let href = '';
   export let inline = false;
 </script>
 
-<a {href} on:click class:inline={inline}>
+<a {href} on:click
+  class:inline={inline}
+  class:active={$page.url.pathname === href}>
   <span><slot></slot></span>
   {#if $$slots.default}
     <span></span>
@@ -30,6 +33,7 @@
     }
   }
 
+  a.active,
   a:hover {
     span:last-child {
       transition: 300ms;

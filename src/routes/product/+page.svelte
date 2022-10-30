@@ -1,19 +1,20 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
 	import { appState } from '$lib/store/app';
 	import { ProductClient } from "$lib/client/supabase.product";
 	import { products } from '$lib/store/products';
+	import { slide } from 'svelte/transition';
 	import { stockStore } from '$lib/store/stock';
-	import { weights } from './_product';
+	import { weights, weightsShort } from './_product';
+
 	import BarCodeScanner from '$lib/components/input/BarCodeScanner.svelte';
 	import Button from '$lib/components/cta/Button.svelte';
 	import Checkbox from '$lib/components/input/Checkbox.svelte';
 	import Input from '$lib/components/input/Input.svelte';
-	import Link from '$lib/components/nav/Link.svelte';
+	import Modal from '$lib/components/overlay/Modal.svelte';
 	import Select from '$lib/components/input/Select.svelte';
 	import Table from '$lib/components/layout/Table.svelte';
   import type { Product } from "$lib/model/product";
-	import Modal from '$lib/components/overlay/Modal.svelte';
+	import SaveStock from './SaveStock.svelte';
 
   // TODO: 
   // Call API and save item to db
@@ -26,24 +27,6 @@
   let homeStore = false;
   let weight_unit = '';
   let weight = '';
-  $: headers = [
-    ...productHeaders,
-    ...$appState.myStore?.id ? stockHeaders : []
-  ];
-
-  let productHeaders = [
-    'Name',
-    'Brand',
-    'Weight',
-    'Unit',
-  ]
-
-  let stockHeaders = [
-    'Aisle',
-    'Shelf',
-    'Level',
-    'Price',
-  ]
   let modalTrigger: any[] = [];
 
   function add() {
@@ -69,10 +52,6 @@
     let products$ = ProductClient.findProducts(product) as Promise<Product[]>;
     let response = await products$;
     $products = [...response];
-  }
-
-  function viewProduct(product: Product) {
-    $appState.product = product;
   }
 
   function onErr(err: { detail: string }) {
@@ -167,8 +146,21 @@
 </div>
 
 {#if filtered.length}
-<div transition:slide|local>
-  <Table {headers} caption={'We found ' + filtered.length + ' matching products'}>
+<div transition:slide|local class="reset">
+  <Table caption={'We found ' + filtered.length + ' matching products'}>
+    <tr slot="headerTemplate">
+      <th>Name</th>
+      <th class="dt-only">Brand</th>
+      <th>Weight</th>
+      <th>Unit</th>
+      {#if $appState.myStore?.id}
+        <th class="dt-only">Aisle</th>
+        <th class="dt-only">Shelf</th>
+        <th class="dt-only">Level</th>
+        <th class="dt-only">Price</th>
+      {/if}
+    </tr>
+
     {#each filtered as p, i (p.id)}
       {@const myStore = $appState.myStore}
       {@const stock = $stockStore.find(s => myStore && s.productId === p.id && s.storeId === myStore.id)}
@@ -179,33 +171,43 @@
             <div slot="title">{p.name}</div>
             <div slot="modal">
               <Input id={'s-name'} label={'store name'} type={'text'} required={true}
-                srOnlyLabel={true} placeholder={'Store Name'} bind:value={p.brand} />
+                placeholder={'Store Name'} bind:value={p.brand} />
               <Input id={'s-cate'} label={'category'} type={'text'} required={true}
-                srOnlyLabel={true} placeholder={'Category'} bind:value={p.name} />
+                placeholder={'Category'} bind:value={p.name} />
               <Input id={'s-addy'} label={'address'} type={'text'} required={true}
-                srOnlyLabel={true} placeholder={'Address'} bind:value={p.weight} />
+                placeholder={'Address'} bind:value={p.weight} />
               <Input id={'s-city'} label={'city'} type={'text'} required={true}
-                srOnlyLabel={true} placeholder={'City'} bind:value={p.weight_unit} />
+                placeholder={'City'} bind:value={p.weight_unit} />
+                
+              {#if stock && myStore}
+                <SaveStock {stock} />
+              {/if}
             </div>
           </Modal>
         </td>
-        <td>
+        <td class="dt-only">
           <Button on:click={modalTrigger[i]}>{p.brand || ''}</Button>
         </td>
         <td>
           <Button on:click={modalTrigger[i]}>{p.weight || ''}</Button>
         </td>
         <td>
-          <Button on:click={modalTrigger[i]}>{weights.get(p.weight_unit || '')}</Button>
+          <Button on:click={modalTrigger[i]}>{weightsShort.get(p.weight_unit || '')}</Button>
         </td>
         {#if stock && myStore}
-        <td>{stock.aisle || ''}</td>
-        <td>{stock.shelf || ''}</td>
-        <td>{stock.level || ''}</td>
-        <td>${stock.price || ''}</td>
+        <td class="dt-only">{stock.aisle || ''}</td>
+        <td class="dt-only">{stock.shelf || ''}</td>
+        <td class="dt-only">{stock.level || ''}</td>
+        <td class="dt-only">${stock.price || ''}</td>
         {/if}
       </tr>
     {/each}
   </Table>
 </div>
 {/if}
+
+<style>
+  .reset {
+    --unit: 0;
+  }
+</style>

@@ -2,6 +2,7 @@
 	import Link from "./Link.svelte";
 	import Button from "../cta/Button.svelte";
 	import { theme } from "$lib/store/theme";
+  import { page } from '$app/stores';
 </script>
 
 <header>
@@ -12,8 +13,8 @@
     <Link href={"/about"}>About</Link>
   </nav>
   <nav>
-    <Button on:click={() => theme.setTheme('searing')}>Searing Retinas</Button>
-    <Button on:click={() => theme.setTheme('void')}>See Into the Void</Button>
+    <Button on:click={() => theme.setTheme('searing')}>Light</Button>
+    <Button on:click={() => theme.setTheme('void')}>Dark</Button>
   </nav>
 </header>
 

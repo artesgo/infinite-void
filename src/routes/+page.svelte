@@ -65,12 +65,6 @@
   }
 
   $: hasRequired = store.name && store.address && store.city;
-  let headers = [
-    'Name',
-    'Address',
-    'City',
-    'Select',
-  ]
 
   onMount(() => {
     getStockInfo();
@@ -102,8 +96,14 @@
 </div>
 
 {#if $stores && $stores.length > 0}
-<div transition:slide|local >
-  <Table {headers} caption={'We found these stores...'}>
+<div transition:slide|local class="reset">
+  <Table caption={'We found these stores...'}>
+    <tr slot="headerTemplate">
+      <th>Name</th>
+      <th>Address</th>
+      <th class="dt-only">City</th>
+      <th>Action</th>
+    </tr>
     {#each $stores as s, i (s.id)}
       <tr>
         <td>
@@ -125,7 +125,7 @@
         <td>
           <Button on:click={modalTrigger[i]}>{s.address}</Button>
         </td>
-        <td>
+        <td class="dt-only">
           <Button on:click={modalTrigger[i]}>{s.city}</Button>
         </td>
         <td>
@@ -149,3 +149,9 @@
   We couldn't find the store, would you like to add it?
   <Button on:click={add}>Add Store</Button>
 {/if}
+
+<style>
+  .reset {
+    --unit: 0;
+  }
+</style>

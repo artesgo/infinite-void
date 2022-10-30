@@ -8,3 +8,14 @@ export const weights = new Map([
   ["L", "litre (L)"],
   ["kg", "kilogram (kg)"],
 ]);
+
+export const weightsShort = new Map([
+  ["g", "gram"],
+  ["ml", "millilitre"],
+  ["u", "Units"],
+  ["ea", "Each"],
+  ["lb", "pound"],
+  ["oz", "ounce"],
+  ["L", "litre"],
+  ["kg", "kilogram"],
+]);

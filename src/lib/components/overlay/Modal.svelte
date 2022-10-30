@@ -17,8 +17,6 @@
     open = _open;
     dispatcher(action, { open })
   }
-
-  function noop() { }
 </script>
 
 {#if !triggerless}
@@ -28,7 +26,7 @@
 {/if}
 
 {#if open}
-<div transition:fade on:click|preventDefault={noop}>
+<div transition:fade on:click|preventDefault>
   <div class='dialog-backdrop' on:click={() => {
     if (closeOnBackdrop) updateDialog('cancel', false);
   }}></div>
@@ -190,9 +188,9 @@
   [role="dialog"] {
     position: fixed;
     padding: 15px;
-    top: 2rem;
+    top: 4rem;
     left: 50vw;
-    background: #EEE;
+    background: var(--light-bg);
     transform: translateX(
       -50%
     );

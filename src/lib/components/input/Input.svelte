@@ -55,6 +55,7 @@
 
     &::placeholder {
       color: var(--placeholder);
+      font-size: 0.865rem;
     }
   }
   div, input {

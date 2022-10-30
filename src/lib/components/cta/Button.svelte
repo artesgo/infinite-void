@@ -25,6 +25,7 @@
     background-color: var(--light-bg);
     transition: var(--animLength);
     height: var(--controlHeight);
+    margin-bottom: var(--unit);
 
     &.primary {
       border: 1px solid var(--void);

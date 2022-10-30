@@ -1,7 +1,7 @@
 <script lang="ts">
   export let caption: string;
   export let hideCaption: boolean = false;
-  export let headers: string[];
+  export let headers: string[] = [];
 </script>
 
 <table>

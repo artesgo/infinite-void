@@ -1,0 +1,13 @@
+@use './mixins.scss' as m;
+
+.dt-only {
+  @include m.mb-only() {
+    display: none;
+  };
+}
+
+.mb-only {
+  @include m.dt-only() {
+    display: none;
+  }
+}
