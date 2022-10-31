@@ -1,67 +1,61 @@
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
-	import { fade } from "svelte/transition";
-	import Button from "../cta/Button.svelte";
-  export let id: string;
-  export let title: string = "";
-  export let closeOnBackdrop = true;
-  export let triggerless = false;
+	import { createEventDispatcher } from 'svelte';
+	import { fade } from 'svelte/transition';
+	import Button from '../cta/Button.svelte';
+	export let id: string;
+	export let title: string = '';
+	export let closeOnBackdrop = true;
+	export let triggerless = false;
 
-  export const openModal = () => {
-    updateDialog('open', true);
-  }
+	export const openModal = () => {
+		updateDialog('open', true);
+	};
 
-  let open = false;
-  let dispatcher = createEventDispatcher();
-  function updateDialog(action: 'open' | 'cancel' | 'confirm', _open: boolean) {
-    open = _open;
-    dispatcher(action, { open })
-  }
+	let open = false;
+	let dispatcher = createEventDispatcher();
+	function updateDialog(action: 'open' | 'cancel' | 'confirm', _open: boolean) {
+		open = _open;
+		dispatcher(action, { open });
+	}
 </script>
 
 {#if !triggerless}
-  <Button on:click={() => updateDialog('open', true)}>
-    <slot name="trigger"><!-- optional fallback --></slot>
-  </Button>
+	<Button on:click={() => updateDialog('open', true)}>
+		<slot name="trigger"><!-- optional fallback --></slot>
+	</Button>
 {/if}
 
 {#if open}
-<div transition:fade on:click|preventDefault>
-  <div class='dialog-backdrop' on:click={() => {
-    if (closeOnBackdrop) updateDialog('cancel', false);
-  }}></div>
-  <div class="dialogs">
-    <div role="dialog"
-         aria-labelledby={id}
-         aria-modal="true"
-         aria-hidden="false"
-         class="hidden">
-  
-      <h2 id={id} class="dialog_label">
-        {#if $$slots.title}
-          <slot name="title"><!-- optional fallback --></slot>
-        {:else}
-          {title}
-        {/if}
-      </h2>
+	<div transition:fade on:click|preventDefault>
+		<div
+			class="dialog-backdrop"
+			on:click={() => {
+				if (closeOnBackdrop) updateDialog('cancel', false);
+			}}
+		/>
+		<div class="dialogs">
+			<div role="dialog" aria-labelledby={id} aria-modal="true" aria-hidden="false" class="hidden">
+				<h2 {id} class="dialog-title">
+					{#if $$slots.title}
+						<slot name="title"><!-- optional fallback --></slot>
+					{:else}
+						{title}
+					{/if}
+				</h2>
 
-      <div class="dialog_form">
-        <slot name="modal"></slot>
-      </div>
+				<div class="dialog-form">
+					<slot name="modal" />
+				</div>
 
-      <div class="dialog_form_actions">
-        <button type="button" on:click={() => updateDialog('confirm', false)}>
-          Save
-        </button>
-        <!-- <button type="button" onclick="replaceDialog('dialog3', undefined, 'dialog3_close_btn')">
+				<div class="dialog-actions">
+					<Button type={'secondary'} on:click={() => updateDialog('confirm', false)}>Save</Button>
+					<!-- <button type="button" onclick="replaceDialog('dialog3', undefined, 'dialog3_close_btn')">
           Add
         </button> -->
-        <button type="button" on:click={() => updateDialog('cancel', false)}>
-          Cancel
-        </button>
-      </div>
-    </div>
-    <!-- <div id="dialog2"
+					<Button type={'secondary'} on:click={() => updateDialog('cancel', false)}>Cancel</Button>
+				</div>
+			</div>
+			<!-- <div id="dialog2"
          style="background: #FC0"
          role="dialog"
          aria-labelledby="dialog2_label"
@@ -160,42 +154,44 @@
         </p>
       </div>
     </div> -->
-  </div>
-</div>
+		</div>
+	</div>
 {/if}
 
 <style lang="scss">
-  .dialog-backdrop {
-    position: fixed;
-    overflow-y: auto;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: #333;
-    opacity: 0.3;
-  }
+	.dialog-backdrop {
+		position: fixed;
+		overflow-y: auto;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background: #333;
+		opacity: 0.3;
+	}
 
-  // [role="alertdialog"],
-  // [role="dialog"] {
-  //   box-sizing: border-box;
-  //   border: 1px solid #000;
-  //   background-color: #fff;
-  //   min-height: 100vh;
-  // }
+	// [role="alertdialog"],
+	// [role="dialog"] {
+	//   box-sizing: border-box;
+	//   border: 1px solid #000;
+	//   background-color: #fff;
+	//   min-height: 100vh;
+	// }
 
-  // [role="alertdialog"],
-  [role="dialog"] {
-    position: fixed;
-    padding: 15px;
-    top: 4rem;
-    left: 50vw;
-    background: var(--light-bg);
-    transform: translateX(
-      -50%
-    );
-    width: calc(100% - 40px);
-    min-height: auto;
-    box-shadow: 0 20px 40px rgb(0 0 0 / 12%), 0 15px 12px rgb(0 0 0 / 22%);
-  }
+	// [role="alertdialog"],
+	[role='dialog'] {
+		position: fixed;
+		padding: 15px;
+		top: 4rem;
+		left: 50vw;
+		background: var(--light-bg);
+		transform: translateX(-50%);
+		width: calc(100% - 40px);
+		min-height: auto;
+		box-shadow: 0 20px 40px rgb(0 0 0 / 12%), 0 15px 12px rgb(0 0 0 / 22%);
+	}
+
+	.dialog-actions {
+		--unit: 10px;
+	}
 </style>
