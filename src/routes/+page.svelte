@@ -24,6 +24,8 @@
 		city: ''
 	};
 	let searching = false;
+
+  // Svelte: rebind child component method to be called from parent
 	let modalTrigger: any[] = [];
 
 	function add() {

@@ -12,4 +12,3 @@ function createStoresStore() {
 }
 
 export const stores = createStoresStore();
-
