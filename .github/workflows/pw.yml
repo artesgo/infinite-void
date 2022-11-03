@@ -9,8 +9,8 @@ on:
   pull_request:
     branches: [ "main" ]
 
-steps:
-  playwright:
+jobs:
+  container-test-job:
     name: 'Playwright Tests - ${{ matrix.project }} - Shard ${{ matrix.shardIndex }} of ${{ matrix.shardTotal }}'
     runs-on: ubuntu-latest
     container:
