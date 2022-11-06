@@ -5,7 +5,7 @@ export interface Stock {
   aisle: number;
   shelf: number;
   level: number;
-  updated: Date; // date
+  updated: Date | null; // date
   price: number;
 }
 

@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { appState } from '$lib/store/app';
-	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
-	import { StockClient } from '$lib/client/supabase.stock';
-	import { stockStore } from '$lib/store/stock';
 	import { StoreClient } from '$lib/client/supabase.store';
 	import { stores } from '$lib/store/stores';
 
@@ -37,13 +34,7 @@
 	}
 
 	function selectStore(store: Store) {
-		$appState.myStore = store;
-		if (store.id) {
-			localStorage.setItem('storeId', store.id);
-			localStorage.setItem('storeName', store.name);
-			localStorage.setItem('storeAddress', store.address);
-			localStorage.setItem('storeCity', store.city);
-		}
+		appState.setMyStore(store);
 	}
 
 	async function find() {
@@ -53,24 +44,9 @@
 		$stores = [...response];
 	}
 
-	async function getStockInfo() {
-		if (!$appState.myStore) {
-			return;
-		}
-		let stock$ = StockClient.findStock({
-			storeId: $appState.myStore.id
-		});
-		let response = await stock$;
-		if (response?.length) {
-			$stockStore = [...response];
-		}
-	}
 
 	$: hasRequired = store.name && store.address && store.city;
 
-	onMount(() => {
-		getStockInfo();
-	});
 </script>
 
 <svelte:head>

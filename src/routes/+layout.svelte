@@ -1,6 +1,6 @@
 <script>
 	import { stockStore } from '$lib/store/stock';
-	import './global.scss';
+	import '$lib/global.scss';
 	import { appState } from '$lib/store/app';
 	import { onMount } from 'svelte';
 	import { theme } from '$lib/store/theme';

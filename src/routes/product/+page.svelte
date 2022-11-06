@@ -28,14 +28,16 @@
 	let weight_unit = '';
 	let weight = '';
 	let modalTrigger: any[] = [];
+	let saveTrigger: any[] = [];
 
 	function add() {
 		const product = { name, brand, weight, weight_unit, sku };
 		ProductClient.addProduct(product);
 	}
 
-	function save(product: Product) {
+	function save(product: Product, index: number) {
 		ProductClient.updateProduct(product);
+    saveTrigger[index]();
 	}
 
 	function clear() {
@@ -131,9 +133,11 @@
 			srOnlyLabel={true}
 		/>
 	</section>
-	<section class="half-dt">
-		<Checkbox bind:checked={homeStore} id={'p-home-store'}>Show only home store</Checkbox>
-	</section>
+  {#if $appState.myStore}
+	  <section class="half-dt">
+		  <Checkbox bind:checked={homeStore} id={'p-home-store'}>Show only products at {$appState.myStore.address}</Checkbox>
+	  </section>
+  {/if}
 </div>
 <div class="flex">
 	<section>
@@ -155,27 +159,25 @@
 				<th class="dt-only">Brand</th>
 				<th>Weight</th>
 				<th>Unit</th>
-				{#if $appState.myStore?.id}
-					<th class="dt-only">Aisle</th>
-					<th class="dt-only">Shelf</th>
-					<th class="dt-only">Level</th>
-					<th class="dt-only">Price</th>
-				{/if}
+        <th class="dt-only">Aisle</th>
+        <th class="dt-only">Shelf</th>
+        <th class="dt-only">Level</th>
+        <th class="dt-only">Price</th>
 			</tr>
 
 			{#each filtered as p, i (p.id)}
 				{@const myStore = $appState.myStore}
-				{@const stock = $stockStore.find(
+        {@const stock = $stockStore.find(
 					(s) => myStore && s.productId === p.id && s.storeId === myStore.id
 				)}
 				<tr>
 					<td>
-						<Modal id={p.id || ''} on:confirm={() => save(p)} bind:openModal={modalTrigger[i]}>
+						<Modal id={p.id || ''} on:confirm={() => save(p, i)} bind:openModal={modalTrigger[i]}>
 							<div slot="trigger">{p.name}</div>
 							<div slot="title">{p.name}</div>
 							<div slot="modal">
 								<Input
-									id={'p-brand'}
+									id={'modal-p-brand'}
 									label={'Brand Name'}
 									type={'text'}
 									required={true}
@@ -183,7 +185,7 @@
 									bind:value={p.brand}
 								/>
 								<Input
-									id={'p-name'}
+									id={'modal-p-name'}
 									label={'Product Name'}
 									type={'text'}
 									required={true}
@@ -191,43 +193,38 @@
 									bind:value={p.name}
 								/>
 								<Input
-									id={'p-weight'}
+									id={'modal-p-weight'}
 									label={'Weight'}
 									type={'text'}
 									required={true}
 									placeholder={'Weight...'}
 									bind:value={p.weight}
 								/>
-								<Input
-									id={'p-unit'}
-									label={'Unit'}
-									type={'text'}
-									required={true}
-									placeholder={'Unit...'}
-									bind:value={p.weight_unit}
-								/>
-
-								{#if stock && myStore}
-									<SaveStock {stock} />
+                <Select id={'modal-p-units'} bind:value={p.weight_unit} srOnlyLabel={true}>
+                  <option value="g">{weights.get('g')}</option>
+                  <option value="ml">{weights.get('ml')}</option>
+                  <option value="u">{weights.get('u')}</option>
+                  <option value="ea">{weights.get('ea')}</option>
+                  <option value="lb">{weights.get('lb')}</option>
+                  <option value="oz">{weights.get('oz')}</option>
+                  <option value="L">{weights.get('L')}</option>
+                  <option value="kg">{weights.get('kg')}</option>
+                </Select>
+								{#if stock || myStore}
+									<SaveStock {stock} store={myStore} product={p} bind:saveStock={saveTrigger[i]} />
 								{/if}
 							</div>
 						</Modal>
 					</td>
-					<td class="dt-only">
-						<Button on:click={modalTrigger[i]}>{p.brand || ''}</Button>
-					</td>
-					<td>
-						<Button on:click={modalTrigger[i]}>{p.weight || ''}</Button>
-					</td>
-					<td>
-						<Button on:click={modalTrigger[i]}>{weightsShort.get(p.weight_unit || '')}</Button>
-					</td>
-					{#if stock && myStore}
-						<td class="dt-only">{stock.aisle || ''}</td>
-						<td class="dt-only">{stock.shelf || ''}</td>
-						<td class="dt-only">{stock.level || ''}</td>
-						<td class="dt-only">${stock.price || ''}</td>
-					{/if}
+					<td class="emulate-button dt-only">{p.brand || ''}</td>
+					<td class="emulate-button">{p.weight || ''}</td>
+					<td class="emulate-button">{weightsShort.get(p.weight_unit || '')}</td>
+          <td class="emulate-button dt-only">{stock?.aisle || ''}</td>
+          <td class="emulate-button dt-only">{stock?.shelf || ''}</td>
+          <td class="emulate-button dt-only">{stock?.level || ''}</td>
+          <td class="emulate-button dt-only">{#if stock?.price}
+            ${stock?.price}
+          {/if}</td>
 				</tr>
 			{/each}
 		</Table>

@@ -182,7 +182,7 @@
 	[role='dialog'] {
 		position: fixed;
 		padding: 15px;
-		top: 4rem;
+		top: 1rem;
 		left: 50vw;
 		background: var(--light-bg);
 		transform: translateX(-50%);
