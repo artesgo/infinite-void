@@ -11,4 +11,4 @@ function createProductsStore() {
   }
 }
 
-export const products = createProductsStore();
+export const productsStore = createProductsStore();

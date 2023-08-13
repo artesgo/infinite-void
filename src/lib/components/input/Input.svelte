@@ -3,15 +3,16 @@
 
   export let type = 'text';
   export let id: string;
+  export let name: string;
   export let value: string | number | undefined;
   export let label = '';
   export let required = false;
   export let placeholder = 'placeholder';
-  export let pattern = '';
+  export let pattern = '.*';
   export let autocomplete: 'on' | 'off' = 'off';
   export let srOnlyLabel = false;
   $: props = {
-    id, required, placeholder, pattern, autocomplete
+    id, required, placeholder, pattern, autocomplete, name,
   }
 </script>
 

@@ -53,6 +53,16 @@ main {
   transition: var(--animLength);
 }
 
+.emulate-button {
+  background: var(--light-bg);
+  margin: 0 auto;
+  padding: 0 10px;
+
+  button {
+    border: none;
+  }
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 5px;

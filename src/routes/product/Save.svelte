@@ -1,11 +1,9 @@
 <script lang="ts">
-	import { ProductClient } from "$lib/client/supabase.product";
 	import Button from "$lib/components/cta/Button.svelte";
 	import type { Product } from "$lib/model/product";
   export let product: Product;
-
   function saveProduct() {
-    ProductClient.updateProduct(product);
+    // ProductClient.updateProduct(product);
   }
 </script>
 

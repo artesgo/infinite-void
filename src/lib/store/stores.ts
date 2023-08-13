@@ -1,8 +1,7 @@
-import type { Store } from "$lib/model/store";
 import { writable } from "svelte/store";
 
 function createStoresStore() {
-  const { subscribe, update, set } = writable<Store[]>([]);
+  const { subscribe, update, set } = writable([]);
 
   return {
     subscribe,
@@ -11,4 +10,4 @@ function createStoresStore() {
   }
 }
 
-export const stores = createStoresStore();
+export const storesStore = createStoresStore();

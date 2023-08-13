@@ -1,5 +1,6 @@
 <script lang="ts">
   export let id: string;
+  export let name: string;
   export let value: string | undefined;
   export let placeholder: string = '';
   export let disabled = false;
@@ -11,6 +12,7 @@
 </label>
 <select
   {id}
+  {name}
   bind:value={value}
   {placeholder}
   {disabled}

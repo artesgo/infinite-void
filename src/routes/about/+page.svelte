@@ -10,7 +10,7 @@
 <p>
   You're looking for that one thing, but it's nowhere to be found.
   Is it out of stock?
-  <img href="" alt="confused.jpg">
+  <img src="" alt="confused.jpg">
 </p>
 
 <p>

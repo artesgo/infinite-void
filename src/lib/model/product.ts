@@ -1,6 +1,6 @@
 export interface Product {
   id?: string,
-  name: string,
+  name?: string,
   brand?: string,
   weight?: string,
   weight_unit?: string;
@@ -10,4 +10,5 @@ export interface Product {
 export interface ProductSearchParams {
   name?: string;
   brand?: string;
+  sku?: string;
 }

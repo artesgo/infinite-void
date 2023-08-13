@@ -2,13 +2,12 @@
 	import Link from "./Link.svelte";
 	import Button from "../cta/Button.svelte";
 	import { theme } from "$lib/store/theme";
-  import { page } from '$app/stores';
 </script>
 
 <header>
   <nav>
     <Link href="/">Home</Link>
-    <Link href="/product">Products</Link>
+    <Link prefetch={true} href="/product">Products</Link>
     <!-- <Link href="/map">Map</Link> -->
     <Link href={"/about"}>About</Link>
   </nav>
