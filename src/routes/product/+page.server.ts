@@ -28,7 +28,7 @@ function getStock(data: FormData): Stock {
 }
 
 export const actions: Actions = {
-  find: async ({ request }) => {
+  find: async ({ request, locals: { supabase } }) => {
     const data = await request.formData();
     const product = getProduct(data);
     

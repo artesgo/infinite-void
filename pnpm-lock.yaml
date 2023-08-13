@@ -23,12 +23,18 @@ devDependencies:
   '@sveltejs/kit':
     specifier: ^1.20.4
     version: 1.22.5(svelte@4.2.0)(vite@4.4.9)
+  '@types/uuid':
+    specifier: ^9.0.2
+    version: 9.0.2
   '@typescript-eslint/eslint-plugin':
     specifier: ^5.45.0
     version: 5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.47.0)(typescript@5.1.6)
   '@typescript-eslint/parser':
     specifier: ^5.45.0
     version: 5.62.0(eslint@8.47.0)(typescript@5.1.6)
+  artesgo-holokit:
+    specifier: ^1.4.5
+    version: 1.4.5(svelte@4.2.0)
   eslint:
     specifier: ^8.28.0
     version: 8.47.0
@@ -650,6 +656,10 @@ packages:
     resolution: {integrity: sha512-G8hZ6XJiHnuhQKR7ZmysCeJWE08o8T0AXtk5darsCaTVsYZhhgUrq53jizaR2FvsoeCwJhlmwTjkXBY5Pn/ZHw==}
     dev: true
 
+  /@types/uuid@9.0.2:
+    resolution: {integrity: sha512-kNnC1GFBLuhImSnV7w4njQkUiJi0ZXUycu1rUaouPqiKlXkh77JKgdRnTAp1x5eBwcIwbtI+3otwzuIDEuDoxQ==}
+    dev: true
+
   /@types/websocket@1.0.5:
     resolution: {integrity: sha512-NbsqiNX9CnEfC1Z0Vf4mE1SgAJ07JnRYcNex7AJ9zAVzmiGHmjKFEk7O4TJIsgv2B1sLEb6owKFZrACwdYngsQ==}
     dependencies:
@@ -936,6 +946,14 @@ packages:
   /array-union@2.1.0:
     resolution: {integrity: sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==}
     engines: {node: '>=8'}
+    dev: true
+
+  /artesgo-holokit@1.4.5(svelte@4.2.0):
+    resolution: {integrity: sha512-sNl1LgY7KUffNTBLhOkKH09tf9CV9GHR9kwDxcmoiC6Qf/Lz+Rc2rd493Lv7B2CL5hDe+Pi+fvpPQci04qKSUw==}
+    peerDependencies:
+      svelte: ^3.55.1 || 4.0.0
+    dependencies:
+      svelte: 4.2.0
     dev: true
 
   /assertion-error@1.1.0:

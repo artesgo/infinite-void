@@ -8,6 +8,7 @@
   <nav>
     <Link href="/">Home</Link>
     <Link prefetch={true} href="/product">Products</Link>
+    <Link prefetch={true} href="/profile">Profile</Link>
     <!-- <Link href="/map">Map</Link> -->
     <Link href={"/about"}>About</Link>
   </nav>
