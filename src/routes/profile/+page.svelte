@@ -5,7 +5,7 @@
 	import { slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import type { Session } from '@supabase/supabase-js';
-	import { Button, Card, Checkbox, Input, Password } from 'artesgo-holokit';
+	import { Button, Card, Checkbox, Input, Password } from '@artesgo/holokit';
 	export let form: ActionData;
 
 	let signup = false;

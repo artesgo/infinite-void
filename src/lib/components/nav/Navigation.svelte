@@ -1,34 +1,44 @@
 <script>
-	import Link from "./Link.svelte";
-	import Button from "../cta/Button.svelte";
 	import { theme } from "$lib/store/theme";
+	import Link from "./Link.svelte";
+
+  function toggleTheme() {
+    if ($theme === 'dark') {
+      theme.setTheme('light');
+    } else {
+      theme.setTheme('dark');
+    }
+    console.log($theme);
+  }
 </script>
 
 <header>
-  <nav>
-    <Link href="/">Home</Link>
-    <Link prefetch={true} href="/product">Products</Link>
-    <Link prefetch={true} href="/profile">Profile</Link>
-    <!-- <Link href="/map">Map</Link> -->
-    <Link href={"/about"}>About</Link>
-  </nav>
-  <nav>
-    <Button on:click={() => theme.setTheme('searing')}>Light</Button>
-    <Button on:click={() => theme.setTheme('void')}>Dark</Button>
+  <nav class="tabs">
+    <Link disabled></Link>
+    <Link prefetch href="/">Home</Link>
+    <Link prefetch href="/product">Products</Link>
+    <!-- create a drawer that pulls out to show the checklist while on the products page -->
+    <Link href="/checklist">Checklist</Link>
+    <Link href="/profile">Profile</Link>
+    <!-- <a class="tab" href="/map">Map</a> -->
+    <Link href="/about">About</Link>
+    <button class="tab tab-lifted" on:click={toggleTheme}>
+      <div class='sr-only'>{$theme}</div>
+      {#if $theme === 'dark'}
+        <img width="32px" src='moon.svg' alt='' role="presentation" />
+      {:else}
+        <img width="32px" src='sun.svg' alt='' role="presentation" />
+      {/if}
+    </button>
+    <Link disabled></Link>
   </nav>
 </header>
 
 <style lang="scss">
-  header {
-    display: flex;
-    justify-content: space-between;
-    height: 40px;
-  }
-
   nav {
-    margin: 10px;
     display: flex;
     height: 30px;
     align-items: center;
+    width: 100%;
   }
 </style>

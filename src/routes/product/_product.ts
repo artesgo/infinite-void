@@ -12,7 +12,7 @@ export const weights = new Map([
 export const weightsShort = new Map([
   ["g", "gram"],
   ["ml", "millilitre"],
-  ["u", "Units"],
+  ["u", "units"],
   ["ea", "Each"],
   ["lb", "pound"],
   ["oz", "ounce"],

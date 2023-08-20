@@ -1,6 +1,6 @@
 <script>
 	import { enhance } from "$app/forms";
-	import { Button, Password } from "artesgo-holokit";
+	import { Button, Password } from "@artesgo/holokit";
     let password = '';
     let confirm = '';
     $: match = password === confirm;

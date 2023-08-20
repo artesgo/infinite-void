@@ -1,65 +1,43 @@
 <script lang="ts">
-  import Required from "./Required.svelte";
+	import Required from './Required.svelte';
 
-  export let type = 'text';
-  export let id: string;
-  export let name: string;
-  export let value: string | number | undefined;
-  export let label = '';
-  export let required = false;
-  export let placeholder = 'placeholder';
-  export let pattern = '.*';
-  export let autocomplete: 'on' | 'off' = 'off';
-  export let srOnlyLabel = false;
-  $: props = {
-    id, required, placeholder, pattern, autocomplete, name,
-  }
+	export let id: string;
+	export let name: string;
+	export let value: string | number | undefined;
+	export let label = '';
+	export let required = false;
+	export let placeholder = 'placeholder';
+	export let pattern = '.*';
+	export let autocomplete: 'on' | 'off' = 'off';
+	$: props = {
+		id,
+		required,
+		placeholder,
+		pattern,
+		autocomplete,
+		name
+	};
 </script>
 
-<label for={id} class:sr-only={srOnlyLabel}>
-  <span class='label'>{label}</span>
-  {#if required}
-    <Required />
-  {/if}
+<label {...$$restProps} for={id} class="join-item input input-success mb-2 w-1/2 flex items-center">
+	<span class="sr-only">{label}</span>
+	{#if required}
+		<Required />
+	{/if}
+	<input class="px-4 input-success" {...props} bind:value />
 </label>
 
-<div class="mb-1">
-  {#if type === 'text'}
-    <input type="text" bind:value {...props}
-      on:click on:blur on:focus
-      on:mouseenter on:mouseout
-      on:keydown on:keypress on:keyup />
-  {:else}
-    <input type="number" bind:value {...props}
-      on:click on:blur on:focus
-      on:mouseenter on:mouseout
-      on:keydown on:keypress on:keyup />
-  {/if}
-</div>
-
 <style lang="scss">
-  label {
-    display: flex;
-    justify-content: flex-start;
+	input {
+		width: 100%;
+    height: 100%;
+	}
+  input:focus {
+    outline-offset: 3px;
+    z-index: 1;
+    outline-color: rgb(54, 211, 153);
   }
-  .label {
-    margin-right: 1rem;
-  }
-  input {
-    border: 1px solid;
-    padding: 0 10px;
-    font-size: var(--controlFontSize);
-    height: var(--controlHeight);
-    color: var(--fg);
-    background-color: var(--light-bg);
-    transition: var(--animLength);
-
-    &::placeholder {
-      color: var(--placeholder);
-      font-size: 0.865rem;
-    }
-  }
-  div, input {
-    width: 100%;
-  }
+	label {
+		padding: 0;
+	}
 </style>

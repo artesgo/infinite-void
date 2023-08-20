@@ -1,10 +1,12 @@
 <script lang="ts">
 	import '$lib/global.scss';
+
 	import { appState } from '$lib/store/app';
-	import { onMount } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 	import { theme } from '$lib/store/theme';
 	import Footer from '$lib/components/nav/Footer.svelte';
 	import Navigation from '$lib/components/nav/Navigation.svelte';
+	import { MediaMonitor, createFocusManager, createMediaManager } from '@artesgo/holokit';
 
 	let loaded = false;
 
@@ -25,15 +27,25 @@
 			loaded = true;
 		}, 10);
 	});
+	
+	const focusManager = createFocusManager();
+	setContext('focus', focusManager);
+
+	const mediaManager = createMediaManager();
+	setContext('media', mediaManager);
 </script>
 
-<div
-	class="app"
-	class:loaded
->
+<section data-theme={$theme} class="min-h-full">
+	<MediaMonitor />
 	<Navigation />
 	<main>
 		<slot />
 	</main>
-	<!-- <Footer /> -->
-</div>
+	<Footer />
+</section>
+
+<style>
+	section {
+		padding: 20px 0;
+	}
+</style>

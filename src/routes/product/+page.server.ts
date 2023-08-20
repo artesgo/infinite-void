@@ -3,8 +3,9 @@ import type { Product } from '$lib/model/product';
 import type { Stock } from '$lib/model/stock';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
+import { ProductClient } from '$lib/client/supabase.product';
 
-// let cachedProducts: Product[] = [];
+let cachedProducts: Product[] = [];
 
 function getProduct(data: FormData): Product {
   return {
@@ -33,41 +34,41 @@ export const actions: Actions = {
     const product = getProduct(data);
     
     try {
-      // const products = ProductClient.findProducts({
-      //   name: product.name || '',
-      //   brand: product.brand || '',
-      //   sku: product.sku || '',
-      // })
-      // const response = await products;
-      // if (response) {
-      //   cachedProducts = response;
-      // }
-      // return { success: true, products: response, ...product };
+      const products = ProductClient.findProducts({
+        name: product.name || '',
+        brand: product.brand || '',
+        sku: product.sku || '',
+      }, supabase)
+      const response = await products;
+      if (response) {
+        cachedProducts = response;
+      }
+      return { success: true, products: response, ...product };
     } catch (error) {
-      // return { success: false, products: cachedProducts, ...product };
+      return { success: false, products: cachedProducts, ...product };
     }
   },
-  add: async ({ request }) => {
+  add: async ({ request, locals: { supabase } }) => {
     const data = await request.formData();
     
     const products = getProduct(data);
 
     try {
       const product = getProduct(data);
-      if (product.name && product.name.length < 2) {
+      if (product.name && product.name.length < 3) {
         return fail(400, {
           error: true,
           message: 'Name must be at least two characters.',
           ...product
         })
       }
-      // ProductClient.addProduct(product);
-      // return { success: true, products: [...cachedProducts, product], ...products };
+      ProductClient.addProduct(product, supabase);
+      return { success: true, products: [...cachedProducts, product], ...products };
     } catch (error) {
-      // return { success: false, products: cachedProducts, ...products };
+      return { success: false, products: cachedProducts, ...products };
     }
   },
-  saveStockProduct: async ({ request }) => {
+  saveStockProduct: async ({ request, locals: { supabase } }) => {
     const data = await request.formData();
     
     const product = getProduct(data);
@@ -75,17 +76,17 @@ export const actions: Actions = {
 
     try {
       const product = getProduct(data);
-      if (product.name && product.name.length < 2) {
+      if (product.name && product.name.length < 3) {
         return fail(400, {
           error: true,
           message: 'Name must be at least two characters.',
           ...product
         })
       }
-      // ProductClient.addProduct(product); TODO:
-      // return { success: true, products: [...cachedProducts, product], ...product, ...stock };
+      ProductClient.addProduct(product, supabase);
+      return { success: true, products: [...cachedProducts, product], ...product, ...stock };
     } catch (error) {
-      // return { success: false, products: cachedProducts, ...product, ...stock };
+      return { success: false, products: cachedProducts, ...product, ...stock };
     }
   }
 }

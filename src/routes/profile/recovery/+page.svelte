@@ -1,6 +1,6 @@
 <script>
 	import { enhance } from '$app/forms';
-	import { Button, Input } from 'artesgo-holokit';
+	import { Button, Input } from '@artesgo/holokit';
 </script>
 
 <div class="narrow-page">

@@ -24,7 +24,7 @@
 		"@types/uuid": "^9.0.2",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
-		"artesgo-holokit": "^1.4.5",
+		"daisyui": "^3.5.1",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte": "^2.30.0",
@@ -36,11 +36,17 @@
 		"svelte-check": "^3.4.3",
 		"svelte-device-info": "^1.0.0",
 		"svelte-preprocess": "^5.0.4",
+		"tailwindcss": "^3.3.3",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
 		"uuid": "^9.0.0",
 		"vite": "^4.4.2",
 		"vitest": "^0.32.2"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@artesgo/holokit": "^1.5.1",
+		"autoprefixer": "^10.4.15",
+		"postcss": "^8.4.28"
+	}
 }

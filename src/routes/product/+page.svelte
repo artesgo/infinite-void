@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
-
 	import { enhance } from '$app/forms';
 
 	import { weights, weightsShort } from './_product';
@@ -11,30 +9,28 @@
 	import { productsStore } from '$lib/store/products';
 	import { stockStore } from '$lib/store/stock';
 	import BarCodeScanner from '$lib/components/input/BarCodeScanner.svelte';
-	import Button from '$lib/components/cta/Button.svelte';
-	import Checkbox from '$lib/components/input/Checkbox.svelte';
+	import { Button, Modal, type MediaContext, isBreakpoint, gfly } from '@artesgo/holokit';
+	import { getContext } from 'svelte';
 	import Input from '$lib/components/input/Input.svelte';
-	import Modal from '$lib/components/overlay/Modal.svelte';
-	import Select from '$lib/components/input/Select.svelte';
-	import Table from '$lib/components/layout/Table.svelte';
-	import type { Product } from '$lib/model/product';
 
-	// export let data: PageData;
 	export let form: ActionData;
 	// Double check item duplicates
 	// Show list of existing items that match product name / brand
-	let homeStore = false;
+	let homeStore = true;
 	let modalTrigger: any[] = [];
 	let saveTrigger: any[] = [];
+	let brand = '';
+	let name = '';
+	let sku = '';
+	let weight_unit = '';
+	let weight = '';
 
 	function clear() {
-		if (form) {
-			form.brand = '';
-			form.name = '';
-			form.sku = '';
-			form.weight_unit = '';
-			form.weight = '';
-		}
+		brand = '';
+		name = '';
+		sku = '';
+		weight_unit = '';
+		weight = '';
 	}
 
 	function onBarcodeErr(err: { detail: string }) {
@@ -70,6 +66,8 @@
 	function handleFormActions(data: any) {
 		console.log(data);
 	}
+	const mediaManager = getContext<MediaContext>('media');
+	$: atLeastMobile = isBreakpoint($mediaManager).atLeastMobile();
 </script>
 
 <svelte:head>
@@ -78,75 +76,67 @@
 
 <h1>Product List</h1>
 
-<form method="POST" use:enhance={(data) => handleFormActions(data)}>
-	<div class="flex-dt wrap">
-		<section class="half-dt">
-			<!-- save to product table -->
-			<Input
-				value={form?.brand ?? ''}
-				placeholder="enter the product's brand..."
-				type={'text'}
-				id={'p-brand'}
-				name={'brand'}
-				label={'Product Brand'}
-				srOnlyLabel={true}
-			/>
-			<Input
-				value={form?.name ?? ''}
-				placeholder="enter the product's name..."
-				type={'text'}
-				id={'p-name'}
-				name={'name'}
-				label={'Product Name'}
-				srOnlyLabel={true}
-			/>
-		</section>
-		<section class="half-dt">
-			<Input
-				value={form?.weight ?? ''}
-				placeholder="enter the product's weight..."
-				type={'number'}
-				id={'p-weight'}
-				name={'weight'}
-				label={'Weight'}
-				srOnlyLabel={true}
-			/>
-			<Select id={'p-units'} name={'weight_unit'} value={form?.weight_unit ?? ''} disabled={!form?.weight} srOnlyLabel={true}>
-				<option value="g">{weights.get('g')}</option>
-				<option value="ml">{weights.get('ml')}</option>
-				<option value="u">{weights.get('u')}</option>
-				<option value="ea">{weights.get('ea')}</option>
-				<option value="lb">{weights.get('lb')}</option>
-				<option value="oz">{weights.get('oz')}</option>
-				<option value="L">{weights.get('L')}</option>
-				<option value="kg">{weights.get('kg')}</option>
-			</Select>
-		</section>
+<form method="POST" use:enhance={(data) => handleFormActions(data)}  class="mb-4">
+	<!-- save to product table -->
+	<div class='join w-full'>
+		<Input
+			bind:value={brand}
+			placeholder="product brand..."
+			label="Product Brand"
+			id={'p-brand'}
+			name={'brand'}
+		/>
+		<Input
+			bind:value={name}
+			placeholder="product name..."
+			label="Product Name"
+			id={'p-name'}
+			name={'name'}
+		/>
 	</div>
-	<div class="flex-dt wrap">
-		<section class="half-dt">
-			<Input
-				value={form?.sku ?? ''}
-				placeholder="product's SKU (Optional)..."
-				type={'text'}
-				id={'p-sku'}
-				name={'sku'}
-				label={'Product SKU'}
-				srOnlyLabel={true}
-			/>
-		</section>
+	<div class='join w-full'>
+		<Input
+			bind:value={weight}
+			placeholder="product weight..."
+			label="Product Weight"
+			id={'p-weight'}
+			name={'weight'}
+		/>
+		<select class="join-item select select-success w-1/2" id={'p-units'} bind:value={weight_unit} disabled={!weight}>
+			<option value="g">{weights.get('g')}</option>
+			<option value="ml">{weights.get('ml')}</option>
+			<option value="u">{weights.get('u')}</option>
+			<option value="ea">{weights.get('ea')}</option>
+			<option value="lb">{weights.get('lb')}</option>
+			<option value="oz">{weights.get('oz')}</option>
+			<option value="L">{weights.get('L')}</option>
+			<option value="kg">{weights.get('kg')}</option>
+		</select>
+	</div>
+
+	<div class='join w-full'>
+		<Input
+			value={form?.sku ?? ''}
+			placeholder="product SKU (Optional)..."
+			label="Product SKU (Optional)"
+			id={'p-sku'}
+			name={'sku'}
+		/>
 		{#if $appState.myStore}
-			<section class="half-dt">
-				<Checkbox bind:checked={homeStore} id={'p-home-store'}>Show only products at {$appState.myStore.address}</Checkbox>
+			<section class="join-item input input-success flex items-center w-1/2">
+				<input class="checkbox checkbox-success mx-2" type="checkbox" bind:checked={homeStore} id='p-home-store' />
+				<label for="p-home-store">
+					only products at {$appState.myStore.address}
+				</label>
 			</section>
 		{/if}
 	</div>
 
-	<div class="pl-1 pr-1">
+	<div>
 		<!-- <Button on:click={find}>Find</Button> -->
-		<Button formaction='/product?/find' type="submit">Find Product</Button>
-		<Button formaction='/product?/add' type="submit">Add Product</Button>
-		<Button on:click={clear}>Clear Inputs</Button>
+		<button class="btn btn-xs btn-success" formaction='/product?/find' type="submit">Find Product</button>
+		<button class="btn btn-xs btn-success" formaction='/product?/add' type="submit">Add Product</button>
+		<button class="btn btn-xs btn-success" on:click={clear}>Clear Inputs</button>
 	</div>
 
 	<div class="flex">
@@ -157,9 +147,10 @@
 </form>
 
 {#if filtered.length}
-	<div transition:slide|local class="reset">
-		<Table caption={'We found ' + filtered.length + ' matching products'}>
-			<tr slot="headerTemplate">
+	<div transition:gfly={{ y: 999 }} class="reset">
+		<table class="table">
+			<caption>{'We found ' + filtered.length + ' matching products'}</caption>
+			<tr>
 				<th>Name</th>
 				<th class="dt-only">Brand</th>
 				<th>Weight</th>
@@ -175,40 +166,34 @@
         {@const stock = $stockStore.find(
 					(s) => myStore && s.productId === p.id && s.storeId === myStore.id
 				)}
-				<tr>
+				<tr class="hover">
 					<td>
-						<Modal id={p.id || ''} bind:openModal={modalTrigger[i]}>
-							<div slot="trigger">{p.name}</div>
-							<div slot="title">{p.name}</div>
-							<form slot="modal" method="POST" use:enhance>
-								<Input
+						<button class="btn btn-success btn-md w-full" on:click={() => modalTrigger[i] = true}>{p.name}</button>
+						<Modal id={p.id || ''} bind:open={modalTrigger[i]}>
+							<h1 slot="header">{p.name}</h1>
+							<form method="POST" use:enhance>
+								<input
+									class="input input-success w-full"
 									id={'modal-p-brand'}
 									name={'brand'}
-									label={'Brand Name'}
-									type={'text'}
-									required={true}
 									placeholder={'Brand Name...'}
 									bind:value={p.brand}
 								/>
-								<Input
+								<input
+									class="input input-success w-full"
 									id={'modal-p-name'}
 									name={'name'}
-									label={'Product Name'}
-									type={'text'}
-									required={true}
 									placeholder={'Product Name...'}
 									bind:value={p.name}
 								/>
-								<Input
+								<input
+									class="input input-success w-full"
 									id={'modal-p-weight'}
 									name={'weight'}
-									label={'Weight'}
-									type={'text'}
-									required={true}
 									placeholder={'Weight...'}
 									bind:value={p.weight}
 								/>
-                <Select id={'modal-p-units'} name={'weight_unit'} bind:value={p.weight_unit} srOnlyLabel={true}>
+                <select class="select" id={'modal-p-units'} value={p.weight_unit ?? ""}>
                   <option value="g">{weights.get('g')}</option>
                   <option value="ml">{weights.get('ml')}</option>
                   <option value="u">{weights.get('u')}</option>
@@ -217,14 +202,14 @@
                   <option value="oz">{weights.get('oz')}</option>
                   <option value="L">{weights.get('L')}</option>
                   <option value="kg">{weights.get('kg')}</option>
-                </Select>
+								</select>
 								{#if stock || myStore}
 									<SaveStock {stock} store={myStore} product={p} bind:saveStock={saveTrigger[i]} />
 								{/if}
 							</form>
-							<div slot="actions">
-								<Button style={'secondary'} formaction="product?/saveStockProduct" type="submit">Save</Button>
-								<Button style={'secondary'} on:click>Cancel</Button>
+							<div slot="footer">
+								<Button theme={'info'} formaction="product?/saveStockProduct" type="submit">Save</Button>
+								<Button theme={'info'} on:click={() => modalTrigger[i] = !modalTrigger[i]} type="button">Cancel</Button>
 							</div>
 						</Modal>
 					</td>
@@ -239,12 +224,16 @@
           {/if}</td>
 				</tr>
 			{/each}
-		</Table>
+		</table>
 	</div>
 {/if}
 
 <style>
 	.reset {
 		--unit: 0;
+	}
+
+	section.bottom {
+		margin-bottom: 10px;
 	}
 </style>
