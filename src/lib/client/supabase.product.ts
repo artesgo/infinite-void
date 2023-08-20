@@ -1,44 +1,45 @@
-import type { Product, ProductSearchParams } from "$lib/model/product";
+import type { Product, ProductSearchParams } from '$lib/model/product';
 import { v4 } from 'uuid';
-import { supabase, warnError } from "./supabase";
-import { appendSearchParam, trimProps } from "./supabase.utils";
+import { warnError } from './supabase';
+import { appendSearchParam, trimProps } from './supabase.utils';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '../../database.types';
 
 export class ProductClient {
-	static async addProduct(product: Product) {
-		if (!product.id) {
+	static async addProduct(product: Product, supabase: SupabaseClient<Database>) {
+		if (product.id) {
+			trimProps(product);
+			return ProductClient.updateProduct(product, supabase);
+		} else {
 			product.id = v4();
 			trimProps(product);
-			const { data, error } = await supabase.from<Product>('product')
-				.insert(product);
-	
+			const { data, error } = await supabase.from('product').insert(product);
+
 			warnError(error);
 			return data;
-		} else {
-			trimProps(product);
-			return ProductClient.updateProduct(product);
 		}
 	}
-	
-	static async updateProduct(product: Product) {
-		const { data, error } = await supabase.from<Product>('product')
+
+	static async updateProduct(product: Product, supabase: SupabaseClient<Database>) {
+		const { data, error } = await supabase
+			.from('product')
 			.update(product)
 			.match({ id: product.id });
 		warnError(error);
 		return data;
 	}
 
-	static async deleteProduct(product: Product) {
-		const { data, error } = await supabase.from<Product>('product')
-			.delete()
-			.match({ id: product.id });
+	static async deleteProduct(product: Product, supabase: SupabaseClient<Database>) {
+		const { data, error } = await supabase.from('product').delete().match({ id: product.id });
 		warnError(error);
 		return data;
 	}
 
-	static async findProducts(searchOptions: ProductSearchParams) {
-		let base = supabase
-			.from<Product>('product')
-			.select('*');
+	static async findProducts(
+		searchOptions: ProductSearchParams,
+		supabase: SupabaseClient<Database>
+	) {
+		let base = supabase.from('product').select('*');
 		base = appendSearchParam(base, searchOptions, 'name');
 		base = appendSearchParam(base, searchOptions, 'brand');
 		const { data, error } = await base;

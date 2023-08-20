@@ -2,11 +2,11 @@
 export interface Stock {
   storeId?: string;
   productId?: string;
-  aisle: number;
-  shelf: number;
-  level: number;
-  updated: Date | null; // date
-  price: number;
+  aisle?: number;
+  shelf?: number;
+  level?: number;
+  updated?: Date; // date
+  price?: number;
 }
 
 export interface StockSearchParams {

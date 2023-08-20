@@ -7,7 +7,7 @@
 	let dispatch = createEventDispatcher();
   let mobile = false;
 
-  export let value;
+  export let value = '';
 
 	function onScanSuccess(decodedText: string, decodedResult: any) {
 		dispatch('code', decodedText);

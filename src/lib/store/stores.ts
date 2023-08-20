@@ -11,4 +11,4 @@ function createStoresStore() {
   }
 }
 
-export const stores = createStoresStore();
+export const storesStore = createStoresStore();

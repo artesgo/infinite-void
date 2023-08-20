@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { stockStore } from '$lib/store/stock';
 	import { appState } from '$lib/store/app';
-	import { StockClient } from '$lib/client/supabase.stock';
+	// import { StockClient } from '$lib/client/supabase.stock';
 	import Button from '$lib/components/cta/Button.svelte';
 	import type { Product } from '$lib/model/product';
 	import type { Stock } from '$lib/model/stock';
@@ -24,9 +24,9 @@
       updated: new Date()
     }
     if (!stock) {
-      StockClient.addStock(_stock);
+      // StockClient.addStock(_stock);
     } else {
-      StockClient.updateStock(_stock);
+      // StockClient.updateStock(_stock);
       $stockStore = [...$stockStore.map(s => {
         if (s.productId === _stock.productId) {
           s.aisle = aisle;

@@ -1,44 +1,29 @@
 <script lang="ts">
-	import { appState } from '$lib/store/app';
-	import { ProductClient } from '$lib/client/supabase.product';
-	import { products } from '$lib/store/products';
-	import { slide } from 'svelte/transition';
-	import { stockStore } from '$lib/store/stock';
-	import { weights, weightsShort } from './_product';
+	import { enhance } from '$app/forms';
 
-	import BarCodeScanner from '$lib/components/input/BarCodeScanner.svelte';
-	import Button from '$lib/components/cta/Button.svelte';
-	import Checkbox from '$lib/components/input/Checkbox.svelte';
-	import Input from '$lib/components/input/Input.svelte';
-	import Modal from '$lib/components/overlay/Modal.svelte';
-	import Select from '$lib/components/input/Select.svelte';
-	import Table from '$lib/components/layout/Table.svelte';
-	import type { Product } from '$lib/model/product';
+	import { weights, weightsShort } from './_product';
+	import type { ActionData } from './$types';
 	import SaveStock from './SaveStock.svelte';
 
-	// TODO:
-	// Call API and save item to db
+	import { appState } from '$lib/store/app';
+	import { productsStore } from '$lib/store/products';
+	import { stockStore } from '$lib/store/stock';
+	import BarCodeScanner from '$lib/components/input/BarCodeScanner.svelte';
+	import { Button, Modal, type MediaContext, isBreakpoint, gfly } from '@artesgo/holokit';
+	import { getContext } from 'svelte';
+	import Input from '$lib/components/input/Input.svelte';
+
+	export let form: ActionData;
 	// Double check item duplicates
 	// Show list of existing items that match product name / brand
-	let brand = '';
-	let name = '';
-	let searching = false;
-	let sku = '';
-	let homeStore = false;
-	let weight_unit = '';
-	let weight = '';
+	let homeStore = true;
 	let modalTrigger: any[] = [];
 	let saveTrigger: any[] = [];
-
-	function add() {
-		const product = { name, brand, weight, weight_unit, sku };
-		ProductClient.addProduct(product);
-	}
-
-	function save(product: Product, index: number) {
-		ProductClient.updateProduct(product);
-    saveTrigger[index]();
-	}
+	let brand = '';
+	let name = '';
+	let sku = '';
+	let weight_unit = '';
+	let weight = '';
 
 	function clear() {
 		brand = '';
@@ -48,20 +33,16 @@
 		weight = '';
 	}
 
-	async function find() {
-		searching = true;
-		const product = { name, brand, weight, weight_unit, sku };
-		let products$ = ProductClient.findProducts(product) as Promise<Product[]>;
-		let response = await products$;
-		$products = [...response];
-	}
-
-	function onErr(err: { detail: string }) {
+	function onBarcodeErr(err: { detail: string }) {
 		console.warn(err);
 	}
 
+	function setSku(event: any) {
+		if (form) form.sku = event.details;
+	}
+
 	$: filtered = [
-		...$products.filter((p) => {
+		...$productsStore.filter((p) => {
 			if (homeStore) {
 				return (
 					$stockStore.findIndex(
@@ -72,6 +53,21 @@
 			return p;
 		})
 	];
+
+	$: {
+		if (form?.products?.length) {
+			const { products } = form;
+			$productsStore = [...products];
+		} else {
+			$productsStore = [ ];
+		}
+	}
+
+	function handleFormActions(data: any) {
+		console.log(data);
+	}
+	const mediaManager = getContext<MediaContext>('media');
+	$: atLeastMobile = isBreakpoint($mediaManager).atLeastMobile();
 </script>
 
 <svelte:head>
@@ -79,38 +75,34 @@
 </svelte:head>
 
 <h1>Product List</h1>
-<div class="flex-dt wrap">
-	<section class="half-dt">
-		<!-- save to product table -->
+
+<form method="POST" use:enhance={(data) => handleFormActions(data)}  class="mb-4">
+	<!-- save to product table -->
+	<div class='join w-full'>
 		<Input
 			bind:value={brand}
-			placeholder="enter the product's brand..."
-			type={'text'}
+			placeholder="product brand..."
+			label="Product Brand"
 			id={'p-brand'}
-			label={'Product Brand'}
-			required={true}
-			srOnlyLabel={true}
+			name={'brand'}
 		/>
 		<Input
 			bind:value={name}
-			placeholder="enter the product's name..."
-			type={'text'}
+			placeholder="product name..."
+			label="Product Name"
 			id={'p-name'}
-			label={'Product Name'}
-			required={true}
-			srOnlyLabel={true}
+			name={'name'}
 		/>
-	</section>
-	<section class="half-dt">
+	</div>
+	<div class='join w-full'>
 		<Input
 			bind:value={weight}
-			placeholder="enter the product's weight..."
-			type={'number'}
+			placeholder="product weight..."
+			label="Product Weight"
 			id={'p-weight'}
-			label={'Weight'}
-			srOnlyLabel={true}
+			name={'weight'}
 		/>
-		<Select id={'p-units'} bind:value={weight_unit} disabled={!weight} srOnlyLabel={true}>
+		<select class="join-item select select-success w-1/2" id={'p-units'} bind:value={weight_unit} disabled={!weight}>
 			<option value="g">{weights.get('g')}</option>
 			<option value="ml">{weights.get('ml')}</option>
 			<option value="u">{weights.get('u')}</option>
@@ -119,42 +111,46 @@
 			<option value="oz">{weights.get('oz')}</option>
 			<option value="L">{weights.get('L')}</option>
 			<option value="kg">{weights.get('kg')}</option>
-		</Select>
-	</section>
-</div>
-<div class="flex-dt wrap">
-	<section class="half-dt">
-		<Input
-			bind:value={sku}
-			placeholder="product's SKU (Optional)..."
-			type={'text'}
-			id={'p-sku'}
-			label={'Product SKU'}
-			srOnlyLabel={true}
-		/>
-	</section>
-  {#if $appState.myStore}
-	  <section class="half-dt">
-		  <Checkbox bind:checked={homeStore} id={'p-home-store'}>Show only products at {$appState.myStore.address}</Checkbox>
-	  </section>
-  {/if}
-</div>
-<div class="flex">
-	<section>
-		<BarCodeScanner bind:value={sku} on:err={onErr} />
-	</section>
-</div>
+		</select>
+	</div>
 
-<div class="pl-1 pr-1">
-	<Button on:click={find}>Find</Button>
-	<Button on:click={add}>Add Product</Button>
-	<Button on:click={clear}>Clear Inputs</Button>
-</div>
+	<div class='join w-full'>
+		<Input
+			value={form?.sku ?? ''}
+			placeholder="product SKU (Optional)..."
+			label="Product SKU (Optional)"
+			id={'p-sku'}
+			name={'sku'}
+		/>
+		{#if $appState.myStore}
+			<section class="join-item input input-success flex items-center w-1/2">
+				<input class="checkbox checkbox-success mx-2" type="checkbox" bind:checked={homeStore} id='p-home-store' />
+				<label for="p-home-store">
+					only products at {$appState.myStore.address}
+				</label>
+			</section>
+		{/if}
+	</div>
+
+	<div>
+		<!-- <Button on:click={find}>Find</Button> -->
+		<button class="btn btn-xs btn-success" formaction='/product?/find' type="submit">Find Product</button>
+		<button class="btn btn-xs btn-success" formaction='/product?/add' type="submit">Add Product</button>
+		<button class="btn btn-xs btn-success" on:click={clear}>Clear Inputs</button>
+	</div>
+
+	<div class="flex">
+		<section>
+			<BarCodeScanner on:code={(event) => setSku(event)} on:err={onBarcodeErr} />
+		</section>
+	</div>
+</form>
 
 {#if filtered.length}
-	<div transition:slide|local class="reset">
-		<Table caption={'We found ' + filtered.length + ' matching products'}>
-			<tr slot="headerTemplate">
+	<div transition:gfly={{ y: 999 }} class="reset">
+		<table class="table">
+			<caption>{'We found ' + filtered.length + ' matching products'}</caption>
+			<tr>
 				<th>Name</th>
 				<th class="dt-only">Brand</th>
 				<th>Weight</th>
@@ -170,37 +166,34 @@
         {@const stock = $stockStore.find(
 					(s) => myStore && s.productId === p.id && s.storeId === myStore.id
 				)}
-				<tr>
+				<tr class="hover">
 					<td>
-						<Modal id={p.id || ''} on:confirm={() => save(p, i)} bind:openModal={modalTrigger[i]}>
-							<div slot="trigger">{p.name}</div>
-							<div slot="title">{p.name}</div>
-							<div slot="modal">
-								<Input
+						<button class="btn btn-success btn-md w-full" on:click={() => modalTrigger[i] = true}>{p.name}</button>
+						<Modal id={p.id || ''} bind:open={modalTrigger[i]}>
+							<h1 slot="header">{p.name}</h1>
+							<form method="POST" use:enhance>
+								<input
+									class="input input-success w-full"
 									id={'modal-p-brand'}
-									label={'Brand Name'}
-									type={'text'}
-									required={true}
+									name={'brand'}
 									placeholder={'Brand Name...'}
 									bind:value={p.brand}
 								/>
-								<Input
+								<input
+									class="input input-success w-full"
 									id={'modal-p-name'}
-									label={'Product Name'}
-									type={'text'}
-									required={true}
+									name={'name'}
 									placeholder={'Product Name...'}
 									bind:value={p.name}
 								/>
-								<Input
+								<input
+									class="input input-success w-full"
 									id={'modal-p-weight'}
-									label={'Weight'}
-									type={'text'}
-									required={true}
+									name={'weight'}
 									placeholder={'Weight...'}
 									bind:value={p.weight}
 								/>
-                <Select id={'modal-p-units'} bind:value={p.weight_unit} srOnlyLabel={true}>
+                <select class="select" id={'modal-p-units'} value={p.weight_unit ?? ""}>
                   <option value="g">{weights.get('g')}</option>
                   <option value="ml">{weights.get('ml')}</option>
                   <option value="u">{weights.get('u')}</option>
@@ -209,10 +202,14 @@
                   <option value="oz">{weights.get('oz')}</option>
                   <option value="L">{weights.get('L')}</option>
                   <option value="kg">{weights.get('kg')}</option>
-                </Select>
+								</select>
 								{#if stock || myStore}
 									<SaveStock {stock} store={myStore} product={p} bind:saveStock={saveTrigger[i]} />
 								{/if}
+							</form>
+							<div slot="footer">
+								<Button theme={'info'} formaction="product?/saveStockProduct" type="submit">Save</Button>
+								<Button theme={'info'} on:click={() => modalTrigger[i] = !modalTrigger[i]} type="button">Cancel</Button>
 							</div>
 						</Modal>
 					</td>
@@ -227,12 +224,16 @@
           {/if}</td>
 				</tr>
 			{/each}
-		</Table>
+		</table>
 	</div>
 {/if}
 
 <style>
 	.reset {
 		--unit: 0;
+	}
+
+	section.bottom {
+		margin-bottom: 10px;
 	}
 </style>

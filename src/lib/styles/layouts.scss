@@ -1,8 +1,5 @@
 @use './mixins.scss' as m;
 
-section {
-  padding: 10px;
-}
 section.half {
   width: 50%;
   &-dt {

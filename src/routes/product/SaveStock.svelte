@@ -12,7 +12,7 @@
     level: 0,
     shelf: 0,
     price: 0,
-    updated: null,
+    updated: undefined,
   };
   export let store: Store | undefined;
   export let product: Product | undefined;
@@ -22,31 +22,53 @@
   }
 </script>
 
+<div class="sr-only">
+	<Input id={'s-storeId'}
+		name="storeId"
+		label={'storeId'}
+		type={'text'}
+		required={true}
+		placeholder={'storeId...'}
+		value={store?.id}
+	/>
+	<Input id={'s-productId'}
+		name="productId"
+		label={'productId'}
+		type={'text'}
+		required={true}
+		placeholder={'productId...'}
+		value={product?.id}
+	/>
+</div>
 <Input id={'s-aisle'}
+	name="aisle"
 	label={'aisle'}
 	type={'text'}
 	required={true}
 	placeholder={'Aisle...'}
-	bind:value={stock.aisle}
+	value={stock.aisle ?? ''}
 />
 <Input id={'s-shelf'}
+	name="shelf"
 	label={'shelf'}
 	type={'text'}
 	required={true}
 	placeholder={'Shelf...'}
-	bind:value={stock.shelf}
+	value={stock.shelf ?? ''}
 />
 <Input id={'s-level'}
+	name="level"
 	label={'level'}
 	type={'text'}
 	required={true}
 	placeholder={'Level...'}
-	bind:value={stock.level}
+	value={stock.level ?? ''}
 />
 <Input id={'s-price'}
+	name="price"
 	label={'price'}
 	type={'text'}
 	required={true}
 	placeholder={'Price...'}
-	bind:value={stock.price}
+	value={stock.price ?? ''}
 />

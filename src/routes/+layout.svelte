@@ -1,12 +1,12 @@
-<script>
-	import { stockStore } from '$lib/store/stock';
+<script lang="ts">
 	import '$lib/global.scss';
+
 	import { appState } from '$lib/store/app';
-	import { onMount } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 	import { theme } from '$lib/store/theme';
 	import Footer from '$lib/components/nav/Footer.svelte';
 	import Navigation from '$lib/components/nav/Navigation.svelte';
-	import { StockClient } from '$lib/client/supabase.stock';
+	import { MediaMonitor, createFocusManager, createMediaManager } from '@artesgo/holokit';
 
 	let loaded = false;
 
@@ -26,35 +26,26 @@
 		setTimeout(() => {
 			loaded = true;
 		}, 10);
-		
-		getStockInfo();
 	});
 	
-	// we want to to load stock info no matter where the user is
-	async function getStockInfo() {
-		if (!$appState.myStore) {
-			return;
-		}
-		let stock$ = StockClient.findStock({
-			storeId: $appState.myStore.id
-		});
-		let response = await stock$;
-		if (response?.length) {
-			$stockStore = [...response];
-		}
-	}
+	const focusManager = createFocusManager();
+	setContext('focus', focusManager);
+
+	const mediaManager = createMediaManager();
+	setContext('media', mediaManager);
 </script>
 
-<div
-	class="app"
-	class:loaded
-	class:searing={$theme === 'searing'}
-	class:void={$theme === 'void'}
-	class:halloween={$theme === 'ween'}
->
+<section data-theme={$theme} class="min-h-full">
+	<MediaMonitor />
 	<Navigation />
 	<main>
 		<slot />
 	</main>
 	<Footer />
-</div>
+</section>
+
+<style>
+	section {
+		padding: 20px 0;
+	}
+</style>
