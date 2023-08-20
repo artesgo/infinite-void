@@ -232,8 +232,4 @@
 	.reset {
 		--unit: 0;
 	}
-
-	section.bottom {
-		margin-bottom: 10px;
-	}
 </style>
