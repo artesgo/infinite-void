@@ -5,6 +5,8 @@
 	export let name: string;
 	export let value: string | number | undefined;
 	export let label = '';
+	export let join = false;
+	export let full = false;
 	export let required = false;
 	export let placeholder = 'placeholder';
 	export let pattern = '.*';
@@ -17,20 +19,24 @@
 		autocomplete,
 		name
 	};
+	$: _class = full ? 'w-full' : 'w-1/2';
 </script>
 
-<label {...$$restProps} for={id} class="join-item input input-success mb-2 w-1/2 flex items-center">
+<label {...$$restProps} for={id}
+	class:join-item={join}
+	class="input input-success mb-2 flex items-center {_class}">
 	<span class="sr-only">{label}</span>
 	{#if required}
 		<Required />
 	{/if}
-	<input class="px-4 input-success" {...props} bind:value />
+	<input class="px-4" {...props} bind:value />
 </label>
 
 <style lang="scss">
 	input {
 		width: 100%;
     height: 100%;
+		background: transparent;
 	}
   input:focus {
     outline-offset: 3px;

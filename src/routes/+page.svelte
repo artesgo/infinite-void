@@ -6,9 +6,10 @@
 	import Table from '$lib/components/layout/Table.svelte';
 	import type { Store } from '$lib/model/store';
 	import type { ActionData } from './$types';
-	import { Modal, Button, Flex, isBreakpoint, type MediaState, MediaMonitor, type MediaContext } from '@artesgo/holokit';
+	import { isBreakpoint, type MediaContext } from '@artesgo/holokit';
 	import { getContext } from 'svelte';
 	import Input from '$lib/components/input/Input.svelte';
+	import Modal from '$lib/components/overlay/Modal.svelte';
 	export let form: ActionData;
 
   // Svelte: rebind child component method to be called from parent
@@ -37,6 +38,7 @@
 <form method="POST" use:enhance class="mb-4">
 	<div class='join w-full'>
 		<Input
+			join
 			id={'s-name'}
 			name={'name'}
 			placeholder={'Store Name...'}
@@ -44,6 +46,7 @@
 			value={form?.name || ''}
 		/>
 		<Input
+			join
 			id={'s-cate'}
 			name={'category'}
 			placeholder={'Category...'}
@@ -54,12 +57,14 @@
 	
 	<div class='join w-full'>
 		<Input
+			join
 			id={'s-addy'}
 			name={'address'}
 			placeholder={'Address...'}
 			value={form?.address || ''}
 		>Store address</Input>
 		<Input
+			join
 			id={'s-city'}
 			name={'city'}
 			placeholder={'City...'}

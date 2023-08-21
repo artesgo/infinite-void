@@ -5,7 +5,8 @@
 	import { slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import type { Session } from '@supabase/supabase-js';
-	import { Button, Card, Checkbox, Input, Password } from '@artesgo/holokit';
+	import Input from '$lib/components/input/Input.svelte';
+	import Button from '$lib/components/cta/Button.svelte';
 	export let form: ActionData;
 
 	let signup = false;
@@ -49,54 +50,61 @@
 </svelte:head>
 
 <div class='narrow-page'>
-	<Card>
-		{#if checkEmail}
-			Check your email to confirm your signup! &lt;3
-		{:else}
-			<form method='POST' use:enhance action='?/login'>
-				{#if !!$userFacade.user}
-					{#if $userFacade.user.user_metadata.displayName}
-						<h2>
-							Welcome {$userFacade.user.user_metadata.displayName}
-						</h2>
-					{:else}
-						Set your username before you create your own tabs
-					{/if}
-					<Input theme="info" name='displayName' placeholder='Display Name' value={$userFacade.user.user_metadata.displayName} />
-					<Button type='submit' formaction='?/displayName'>Update Display Name</Button>
-					<Button
-						theme="warning"
-						on:click={userFacade.loggedout} type='submit'
-						formaction='?/logout'
-					>Sign Out</Button>
+	{#if checkEmail}
+		Check your email to confirm your signup! &lt;3
+	{:else}
+		<form method='POST' use:enhance action='?/login'>
+			{#if !!$userFacade.user}
+				{#if $userFacade.user.user_metadata.displayName}
+					<h2>
+						Welcome {$userFacade.user.user_metadata.displayName}
+					</h2>
 				{:else}
-					<Input theme="info" name='email' placeholder='Email' bind:value={$userFacade.email} />
-					<Password theme="info" name='password' placeholder='Password' bind:value={pw} />
-					{#if signup}
-						<Password
-							on:change={checkError}
-							bind:value={confirmPw}
-							placeholder='Confirm Password'
-						/>
-						{#if !match}
-							<div transition:slide>Password Confirmation Mismatch.</div>
-						{/if}
+					Set your username before you create your own tabs
+				{/if}
+				<div class='join'>
+					<Input id="displayName" name='displayName' placeholder='Display Name' value={$userFacade.user.user_metadata.displayName} />
+				</div>
+				<Button type='submit' formaction='?/displayName'>Update Display Name</Button>
+				<Button
+					on:click={userFacade.loggedout} type='submit'
+					formaction='?/logout'
+				>Sign Out</Button>
+			{:else}
+				<div class='join w-full'>
+					<Input join id="email" name='email' placeholder='Email' bind:value={$userFacade.email} />
+					<label class='input input-success join-item w-1/2 flex items-center'>
+						<input class="checkbox checkbox-success mr-4" id="saveLogin" type="checkbox" bind:checked={saveEmail} />
+						Save Email
+					</label>
+				</div>
+				<div class='join w-full'>
+					<Input join id="pw" name='password' placeholder='Password' bind:value={pw} />
+					<button class="join-item btn btn-success w-1/2" type='submit'>Sign In</button>
+				</div>
+				{#if signup}
+					<Input
+						id="pwconf"
+						name="confirmation"
+						on:change={checkError}
+						bind:value={confirmPw}
+						placeholder='Confirm Password'
+					/>
+					{#if !match}
+						<div transition:slide>Password Confirmation Mismatch.</div>
 					{/if}
-					<Checkbox id="saveLogin" reverse bind:checked={saveEmail} on:change={save}>Save Login</Checkbox>
-					<Checkbox id="signup" reverse bind:checked={signup}>Signup</Checkbox>
-					{#if signup}
-						<Button theme="info" type='submit' formaction='?/register'>Register</Button>
-					{:else}
-						<Button theme="info" type='submit'>Sign In</Button>
-					{/if}
-
-					<a href="/profile/recovery">
-						<Button theme="info" >
+				{/if}
+				
+				<h2>Don't have an account?</h2>
+				<div class='join w-full'>
+					<Button class="join-item btn btn-success w-1/2" type='submit' formaction='?/register'>Register</Button>
+					<a href="/profile/recovery" class="join-item btn btn-success w-1/2">
+						<Button>
 							Forgot Password
 						</Button>
 					</a>
-				{/if}
-			</form>
-		{/if}
-	</Card>
+				</div>
+			{/if}
+		</form>
+	{/if}
 </div>

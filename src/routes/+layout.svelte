@@ -35,17 +35,27 @@
 	setContext('media', mediaManager);
 </script>
 
-<section data-theme={$theme} class="min-h-full">
+<section data-theme={$theme} class="min-h-full flex flex-col"
+	class:bg-amber-400={$theme === 'light'}
+	class:bg-neutral-900={$theme === 'dark'}
+>
 	<MediaMonitor />
 	<Navigation />
-	<main>
-		<slot />
+	<main class:bg-white={$theme === 'light'} class:bg-neutral-800={$theme === 'dark'}>
+		<div class="md:w-3/4 lg:w-2/5 mx-auto transition-all">
+			<slot />
+		</div>
 	</main>
 	<Footer />
 </section>
 
 <style>
 	section {
-		padding: 20px 0;
+		padding-top: 20px;
+	}
+	main {
+		margin-top: 2px;
+		flex-grow: 1;
+		padding: 20px;
 	}
 </style>

@@ -9,14 +9,15 @@
 	import { productsStore } from '$lib/store/products';
 	import { stockStore } from '$lib/store/stock';
 	import BarCodeScanner from '$lib/components/input/BarCodeScanner.svelte';
-	import { Button, Modal, type MediaContext, isBreakpoint, gfly } from '@artesgo/holokit';
+	import { Button, type MediaContext, isBreakpoint, gfly } from '@artesgo/holokit';
 	import { getContext } from 'svelte';
 	import Input from '$lib/components/input/Input.svelte';
+	import Modal from '$lib/components/overlay/Modal.svelte';
 
 	export let form: ActionData;
 	// Double check item duplicates
 	// Show list of existing items that match product name / brand
-	let homeStore = true;
+	let homeStore = false;
 	let modalTrigger: any[] = [];
 	let saveTrigger: any[] = [];
 	let brand = '';
@@ -80,6 +81,7 @@
 	<!-- save to product table -->
 	<div class='join w-full'>
 		<Input
+			join
 			bind:value={brand}
 			placeholder="product brand..."
 			label="Product Brand"
@@ -87,6 +89,7 @@
 			name={'brand'}
 		/>
 		<Input
+			join
 			bind:value={name}
 			placeholder="product name..."
 			label="Product Name"
@@ -96,6 +99,7 @@
 	</div>
 	<div class='join w-full'>
 		<Input
+			join
 			bind:value={weight}
 			placeholder="product weight..."
 			label="Product Weight"
@@ -116,6 +120,7 @@
 
 	<div class='join w-full'>
 		<Input
+			join
 			value={form?.sku ?? ''}
 			placeholder="product SKU (Optional)..."
 			label="Product SKU (Optional)"
@@ -172,22 +177,22 @@
 						<Modal id={p.id || ''} bind:open={modalTrigger[i]}>
 							<h1 slot="header">{p.name}</h1>
 							<form method="POST" use:enhance>
-								<input
-									class="input input-success w-full"
+								<Input
+									full
 									id={'modal-p-brand'}
 									name={'brand'}
 									placeholder={'Brand Name...'}
 									bind:value={p.brand}
 								/>
-								<input
-									class="input input-success w-full"
+								<Input
+									full
 									id={'modal-p-name'}
 									name={'name'}
 									placeholder={'Product Name...'}
 									bind:value={p.name}
 								/>
-								<input
-									class="input input-success w-full"
+								<Input
+									full
 									id={'modal-p-weight'}
 									name={'weight'}
 									placeholder={'Weight...'}
@@ -207,7 +212,7 @@
 									<SaveStock {stock} store={myStore} product={p} bind:saveStock={saveTrigger[i]} />
 								{/if}
 							</form>
-							<div slot="footer">
+							<div slot="actions">
 								<Button theme={'info'} formaction="product?/saveStockProduct" type="submit">Save</Button>
 								<Button theme={'info'} on:click={() => modalTrigger[i] = !modalTrigger[i]} type="button">Cancel</Button>
 							</div>

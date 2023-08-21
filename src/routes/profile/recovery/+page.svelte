@@ -1,11 +1,9 @@
 <script>
 	import { enhance } from '$app/forms';
-	import { Button, Input } from '@artesgo/holokit';
+	import Input from '$lib/components/input/Input.svelte';
 </script>
 
-<div class="narrow-page">
-	<form method="POST" use:enhance>
-		<Input id="email" name="email" placeholder="Email">Email</Input>
-		<Button type="submit">Send Recovery Email</Button>
-	</form>
-</div>
+<form method="POST" use:enhance class="mx-auto w-full join">
+	<Input join id="email" name="email" placeholder="Email" value=''>Email</Input>
+	<button class="join-item btn btn-success w-1/2" type="submit">Send Recovery Email</button>
+</form>
