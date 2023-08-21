@@ -16,6 +16,7 @@
 	let pw = '';
 	let checkEmail = false;
 	$: if (form?.user) {
+		pw = '';
 		if (form?.displayName) {
 			userFacade.updateUser(form.user);
 		} else if (form?.session) {
@@ -23,10 +24,6 @@
 		} else {
 			checkEmail = true;
 		}
-	}
-
-	function checkError() {
-		match = confirmPw !== '' && confirmPw === pw;
 	}
 
 	function save() {
@@ -60,21 +57,23 @@
 						Welcome {$userFacade.user.user_metadata.displayName}
 					</h2>
 				{:else}
-					Set your username before you create your own tabs
+					<div>Set your username before you can </div>
 				{/if}
-				<div class='join'>
-					<Input id="displayName" name='displayName' placeholder='Display Name' value={$userFacade.user.user_metadata.displayName} />
+				<div class='join w-full'>
+					<Input join id="displayName" name='displayName' placeholder='Display Name' value={$userFacade.user.user_metadata.displayName} />
+					<Button class="join-item btn btn-warning w-1/2" type='submit' formaction='?/displayName'>Update Display Name</Button>
 				</div>
-				<Button type='submit' formaction='?/displayName'>Update Display Name</Button>
-				<Button
-					on:click={userFacade.loggedout} type='submit'
-					formaction='?/logout'
-				>Sign Out</Button>
+				<div class='join w-full'>
+					<Button class="join-item btn btn-success w-1/2"
+						on:click={userFacade.loggedout} type='submit'
+						formaction='?/logout'
+					>Sign Out</Button>
+				</div>
 			{:else}
 				<div class='join w-full'>
 					<Input join id="email" name='email' placeholder='Email' bind:value={$userFacade.email} />
 					<label class='input input-success join-item w-1/2 flex items-center'>
-						<input class="checkbox checkbox-success mr-4" id="saveLogin" type="checkbox" bind:checked={saveEmail} />
+						<input class="checkbox checkbox-success mr-4" id="saveLogin" type="checkbox" bind:checked={saveEmail} on:change={save} />
 						Save Email
 					</label>
 				</div>
@@ -82,19 +81,6 @@
 					<Input join id="pw" name='password' placeholder='Password' bind:value={pw} />
 					<button class="join-item btn btn-success w-1/2" type='submit'>Sign In</button>
 				</div>
-				{#if signup}
-					<Input
-						id="pwconf"
-						name="confirmation"
-						on:change={checkError}
-						bind:value={confirmPw}
-						placeholder='Confirm Password'
-					/>
-					{#if !match}
-						<div transition:slide>Password Confirmation Mismatch.</div>
-					{/if}
-				{/if}
-				
 				<h2>Don't have an account?</h2>
 				<div class='join w-full'>
 					<Button class="join-item btn btn-warning w-1/2" type='submit' formaction='?/register'>Register</Button>
