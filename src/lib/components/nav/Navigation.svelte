@@ -1,4 +1,5 @@
 <script>
+	import { browser } from '$app/environment';
 	import { theme } from "$lib/store/theme";
 	import Link from "./Link.svelte";
 
@@ -8,7 +9,10 @@
     } else {
       theme.setTheme('dark');
     }
-    console.log($theme);
+  }
+  $: if (browser) {
+    const _theme = localStorage.getItem('theme') || 'dark';
+    theme.setTheme(_theme);
   }
 </script>
 
@@ -21,7 +25,7 @@
     <Link href="/checklist">Checklist</Link>
     <Link href="/profile">Profile</Link>
     <!-- <a class="tab" href="/map">Map</a> -->
-    <Link href="/about">About</Link>
+    <!-- <Link href="/about">About</Link> -->
     <button class="tab tab-lifted" on:click={toggleTheme}>
       <div class='sr-only'>{$theme}</div>
       {#if $theme === 'dark'}
