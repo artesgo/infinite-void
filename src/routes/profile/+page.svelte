@@ -2,16 +2,12 @@
 	import { userFacade } from '$lib/store/user.facade';
 	import type { ActionData } from './$types';
 	import { enhance } from '$app/forms';
-	import { slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import type { Session } from '@supabase/supabase-js';
 	import Input from '$lib/components/input/Input.svelte';
 	import Button from '$lib/components/cta/Button.svelte';
 	export let form: ActionData;
 
-	let signup = false;
-	let match = false;
-	let confirmPw = '';
 	let saveEmail = false;
 	let pw = '';
 	let checkEmail = false;

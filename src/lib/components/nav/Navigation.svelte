@@ -18,7 +18,7 @@
 
 <header class:bg-amber-400={$theme === 'light'} class:bg-neutral-900={$theme === 'dark'}>
   <nav class="tabs">
-    <Link disabled></Link>
+    <div class='tab tab-lifted fake-tab'></div>
     <Link prefetch href="/">Home</Link>
     <Link prefetch href="/product">Products</Link>
     <!-- create a drawer that pulls out to show the checklist while on the products page -->
@@ -34,7 +34,7 @@
         <img width="32px" src='sun.svg' alt='' role="presentation" />
       {/if}
     </button>
-    <Link disabled></Link>
+    <div class='tab tab-lifted fake-tab'></div>
   </nav>
 </header>
 
@@ -48,5 +48,8 @@
   header {
     padding-top: 20px;
     padding-bottom: 2px;
+  }
+  .fake-tab {
+    pointer-events: none;
   }
 </style>
