@@ -25,7 +25,7 @@
   .grow {
     flex-grow: 1;
   }
-  .grow.disabled {
+  .disabled {
     flex-grow: 3;
   }
 

@@ -97,7 +97,7 @@
 				
 				<h2>Don't have an account?</h2>
 				<div class='join w-full'>
-					<Button class="join-item btn btn-success w-1/2" type='submit' formaction='?/register'>Register</Button>
+					<Button class="join-item btn btn-warning w-1/2" type='submit' formaction='?/register'>Register</Button>
 					<a href="/profile/recovery" class="join-item btn btn-success w-1/2">
 						<Button>
 							Forgot Password

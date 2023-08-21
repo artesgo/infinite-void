@@ -35,13 +35,10 @@
 	setContext('media', mediaManager);
 </script>
 
-<section data-theme={$theme} class="min-h-full flex flex-col"
-	class:bg-amber-400={$theme === 'light'}
-	class:bg-neutral-900={$theme === 'dark'}
->
+<section data-theme={$theme} class="min-h-full flex flex-col">
 	<MediaMonitor />
 	<Navigation />
-	<main class:bg-white={$theme === 'light'} class:bg-neutral-800={$theme === 'dark'}>
+	<main>
 		<div class="md:w-3/4 lg:w-2/5 mx-auto transition-all">
 			<slot />
 		</div>
@@ -50,9 +47,6 @@
 </section>
 
 <style>
-	section {
-		padding-top: 20px;
-	}
 	main {
 		margin-top: 2px;
 		flex-grow: 1;

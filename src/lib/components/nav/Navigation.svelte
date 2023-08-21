@@ -16,7 +16,7 @@
   }
 </script>
 
-<header>
+<header class:bg-amber-400={$theme === 'light'} class:bg-neutral-900={$theme === 'dark'}>
   <nav class="tabs">
     <Link disabled></Link>
     <Link prefetch href="/">Home</Link>
@@ -44,5 +44,9 @@
     height: 30px;
     align-items: center;
     width: 100%;
+  }
+  header {
+    padding-top: 20px;
+    padding-bottom: 2px;
   }
 </style>
