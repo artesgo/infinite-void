@@ -10,7 +10,7 @@
 
 <a {href} on:click
   data-prefetch-sveltekit={prefetch}
-  class="tab tab-lifted"
+  class="tab tab-lifted tab-xs md:tab-md"
   class:bg-white={active && $theme === 'light'} class:bg-neutral-800={active && $theme === 'dark'}
   class:grow={active}
   class:inline
